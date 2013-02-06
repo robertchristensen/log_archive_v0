@@ -45,7 +45,7 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
         float m_avgleadBucketUsed;
 
         std::vector< std::list< std::set<std::string>* >* >* mp_history;
-        std::vector<int64_t> *mp_last_time_used; // tracks the last time a particular bucket was used.
+        //std::vector<int64_t> *mp_last_time_used; // tracks the last time a particular bucket was used.
 
         static char* seperators;
         const static int history_depth = 10;

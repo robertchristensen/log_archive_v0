@@ -27,7 +27,6 @@ LogDistributerAnalyzer_JaccardSimilarity::LogDistributerAnalyzer_JaccardSimilari
 ,  m_avgleadBucketUsed(0.0)
 {
     mp_history = new vector< list< set<string>* >* >(m_bucketcount);
-    mp_last_time_used = new vector< int64_t >(m_bucketcount);
 
     vector< list< set<string>* >* >::iterator it;
     for(it = mp_history->begin(); it != mp_history->end(); ++it)
@@ -38,8 +37,6 @@ LogDistributerAnalyzer_JaccardSimilarity::LogDistributerAnalyzer_JaccardSimilari
 
 LogDistributerAnalyzer_JaccardSimilarity::~LogDistributerAnalyzer_JaccardSimilarity()
 {
-    delete mp_last_time_used;
-
     vector< list< set<string>* >* >::iterator it_v;
     for(it_v = mp_history->begin(); it_v != mp_history->end(); ++it_v)
     {
@@ -81,7 +78,11 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
     }
 
     if( best_location == NULL ){
+          best_location = mp_history->at(m_leastUsedBucketUsed);
+          best_index = m_leastUsedBucketUsed;
+
           ++m_leastUsedBucketUsed;
+    }
 //        cerr << "                                                                                      \r";
 //        printf("lrb: %6d at %8d since %5d max: %5d avg: %f\r"
 //               , ++m_leastUsedBucketUsed
@@ -90,25 +91,25 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
 //               , m_maxleastBucketUsed
 //               , (float) m_stringsDistributed / (float) m_leastUsedBucketUsed);
 
-        if(m_stringsDistributed - m_lastTimeBucketUsed > m_maxleastBucketUsed)
-            m_maxleastBucketUsed = m_stringsDistributed - m_lastTimeBucketUsed;
-        m_lastTimeBucketUsed = m_stringsDistributed;
+//        if(m_stringsDistributed - m_lastTimeBucketUsed > m_maxleastBucketUsed)
+//            m_maxleastBucketUsed = m_stringsDistributed - m_lastTimeBucketUsed;
+//        m_lastTimeBucketUsed = m_stringsDistributed;
 
-        int64_t leasedValue = mp_last_time_used->at(0);
-        best_location = mp_history->at(0);
-        best_index = 0;
-        for(int i = 1; i < mp_last_time_used->size(); i++){
-            if( mp_last_time_used->at(i) < leasedValue ){
-                leasedValue = mp_last_time_used->at(i);
-                best_location = mp_history->at(i);
-                best_index = i;
-            }
-        }
-    }
+//        int64_t leasedValue = mp_last_time_used->at(0);
+//        best_location = mp_history->at(0);
+//        best_index = 0;
+//        for(int i = 1; i < mp_last_time_used->size(); i++){
+//            if( mp_last_time_used->at(i) < leasedValue ){
+//                leasedValue = mp_last_time_used->at(i);
+//                best_location = mp_history->at(i);
+//                best_index = i;
+//            }
+//        }
+    //}
 
     // after the two loops, we should have the bucket to place the set
 
-    mp_last_time_used->at(best_index) = ++m_stringsDistributed;
+    //mp_last_time_used->at(best_index) = ++m_stringsDistributed;
     best_location->push_front( set_input );
 
     // remove the last element in the history if it exists, to keep the number of records maintanable
@@ -119,6 +120,7 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
     }
 
     //cerr << "best jaccard: " << best_value <<;
+    cerr << "bucket: " << best_index << endl;
     return best_index;
 }
 

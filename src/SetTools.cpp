@@ -50,12 +50,12 @@ void union_intersection_size(const set<string> &A, const set<string> &B, int &co
     // cleanup, we know one of the iterater
     while( A_it != A.end() )
     {
-        ++count_intersect;
+        ++count_union;
         ++A_it;
     }
     while( B_it != B.end() )
     {
-        ++count_intersect;
+        ++count_union;
         ++B_it;
     }
 }
