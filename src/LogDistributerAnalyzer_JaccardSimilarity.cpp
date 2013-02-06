@@ -59,7 +59,7 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
 
     // if all the buckets have already been used, it would be best to place the entry
     // in whatever bucket it would work best in.
-    if( m_leastUsedBucketUsed > m_bucketcount )
+    if( m_leastUsedBucketUsed >= m_bucketcount )
         best_value = 0.0;
 
     set<string>* set_input = new set<string>();
@@ -77,9 +77,11 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
         }
     }
 
+    // this if statment is used if not all the buckets have been filled or if
+    // no similarity is detected.  So similartiy detected should rarely happen.
     if( best_location == NULL ){
-          best_location = mp_history->at(m_leastUsedBucketUsed);
-          best_index = m_leastUsedBucketUsed;
+          best_index = m_leastUsedBucketUsed % mp_history->size();
+          best_location = mp_history->at( best_index );
 
           ++m_leastUsedBucketUsed;
     }
@@ -119,8 +121,6 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
         best_location->pop_back();
     }
 
-    //cerr << "best jaccard: " << best_value <<;
-    cerr << "bucket: " << best_index << endl;
     return best_index;
 }
 
