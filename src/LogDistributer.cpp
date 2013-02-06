@@ -7,6 +7,8 @@
 
 #include <cstring>
 
+int LogDistributer::JACCARD_HISTORY = -1;
+
 LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
 : m_numberOfArchivers(num_archivers),
   m_index(0),
@@ -21,7 +23,7 @@ LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
             mp_analyzer = new LogDistributerAnalyzer_EditDistance(num_archivers);
             break;
         case JACCARD:
-            mp_analyzer = new LogDistributerAnalyzer_JaccardSimilarity(num_archivers);
+            mp_analyzer = new LogDistributerAnalyzer_JaccardSimilarity(num_archivers, JACCARD_HISTORY);
             break;
         default:
             mp_analyzer = new LogDistributerAnalyzer_RoundRobin(num_archivers);

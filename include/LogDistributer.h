@@ -17,6 +17,8 @@ public:
     int insert(char *, int size);
 
     int close();
+
+    static int JACCARD_HISTORY;
 protected:
 private:
     LogArchiver **mp_archivers;
@@ -26,6 +28,8 @@ private:
     int64_t m_index;
 
     bool m_closed;
+
+
 };
 
 #endif // LOGDISTRIBUTER_H

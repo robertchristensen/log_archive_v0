@@ -18,6 +18,7 @@ int BUCKETS = 2;
 LogDistributer::DistributerType DISTRIBUTER = LogDistributer::JACCARD;
 bool quite = false;
 
+
 void parseInput(int argc, char**argv)
 {
     int i=1; // start at arguments
@@ -79,19 +80,30 @@ void parseInput(int argc, char**argv)
         {
             i++;
             DISTRIBUTER = LogDistributer::ROUND_ROBIN;
-            cerr << "using round robin" << endl;
+            //cerr << "using round robin" << endl;
         }
         else if(strcmp("--edit_dist", argv[i]) == 0)
         {
             i++;
             DISTRIBUTER = LogDistributer::EDIT_DISTANCE;
-            cerr << "using edit distance" << endl;
+            //cerr << "using edit distance" << endl;
         }
         else if(strcmp("--jaccard", argv[i]) == 0)
         {
             i++;
             DISTRIBUTER = LogDistributer::JACCARD;
-            cerr << "using jaccard distance" << endl;
+            //cerr << "using jaccard distance" << endl;
+        }
+        else if(strcmp("--jhistory", argv[i]) == 0)
+        {
+            i++;
+            char *end;
+            int x = strtol(argv[i], &end, 10);
+            if(x > 0 && x < 1000)
+                LogDistributer::JACCARD_HISTORY = x;
+            else
+                cerr << "ERROR: unable to parse the history depth for jaccard algorithm" << endl;
+            i++;
         }
         else if(strcmp("--buckets", argv[i]) == 0)
         {

@@ -15,7 +15,7 @@
 class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
 {
     public:
-        LogDistributerAnalyzer_JaccardSimilarity(int buckets);
+        LogDistributerAnalyzer_JaccardSimilarity(int buckets, int depth = 0);
         virtual ~LogDistributerAnalyzer_JaccardSimilarity();
 
         virtual int getBucket(const std::string&);
@@ -38,6 +38,7 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
 
         int64_t m_stringsDistributed;
         int m_bucketcount;
+        int m_historyDepth;
 
         int m_leastUsedBucketUsed;
         int m_lastTimeBucketUsed;
@@ -48,9 +49,8 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
         //std::vector<int64_t> *mp_last_time_used; // tracks the last time a particular bucket was used.
 
         static char* seperators;
-        const static int history_depth = 10;
-        const static float threshold = 0.5;
-
+        const static int history_depth_default = 10;
+        const static float threshold = 0.6;
 };
 
 #endif // LOGDISTRIBUTERANALYZER_JACCARDSIMILARITY_H
