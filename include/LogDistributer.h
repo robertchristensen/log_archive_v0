@@ -27,7 +27,7 @@ private:
     LogDistributerAnalyzer *mp_analyzer;
     //int m_numberOfArchivers;
 
-    int64_t m_index;
+    int m_index;
 
     bool m_closed;
 

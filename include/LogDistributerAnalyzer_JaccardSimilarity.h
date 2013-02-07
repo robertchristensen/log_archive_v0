@@ -38,6 +38,7 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
         int m_maxleastBucketUsed;
         float m_avgleadBucketUsed;
         float m_threshold;
+        float m_upperThreshold;
 
         std::vector< std::list< std::set<std::string>* >* >* mp_history;
         //std::vector<int64_t> *mp_last_time_used; // tracks the last time a particular bucket was used.
@@ -45,6 +46,7 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
         static char* seperators;
         const static int history_depth_default = 10;
         const static float default_threshold = 0.5;
+        const static float upper_threshold = 0.9;
 };
 
 #endif // LOGDISTRIBUTERANALYZER_JACCARDSIMILARITY_H

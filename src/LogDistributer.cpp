@@ -69,8 +69,10 @@ int LogDistributer::close()
 
 int LogDistributer::insert(char *str, int size)
 {
+    const int index_size = 5;
+
     // TODO: it would increase the speed of the algorithm to not dynamically allocate memmory
-    //char *tmp_str = new char[sizeof(m_index) + size];
+    //char *tmp_str = new char[index_size + size];
 
     // find string similarity before repacking
     int bucket = mp_analyzer->getBucket(str);
@@ -79,14 +81,17 @@ int LogDistributer::insert(char *str, int size)
     if(bucket == mp_archivers->size())
     {
         mp_archivers->push_back(new LogArchiver(bucket));
-
     }
 
-    // insert index at the begining of the array, then place the string at the end
-    //*((int64_t*) tmp_str) = m_index++;
-    //memcpy(tmp_str + sizeof(m_index), str, size);
+    // using string values to record the record number:
+    // we start by forcing the number of digits to be 8
 
-    //int retVal = mp_archivers[bucket]->InsertRecord(tmp_str, size + sizeof(m_index));
+
+    // insert index at the begining of the array, then place the string at the end
+    //snprintf(tmp_str, index_size+1, "%05d", m_index++);
+    //memcpy(tmp_str + index_size, str, size);
+
+    //int retVal = mp_archivers->at(bucket)->InsertRecord(tmp_str, size + index_size);
     int retVal = mp_archivers->at(bucket)->InsertRecord(str, size);
 
     //delete []tmp_str;

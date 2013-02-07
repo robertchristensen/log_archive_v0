@@ -73,13 +73,16 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
     vector< list< set<string>* >* >::iterator it;
     for( it = mp_history->begin(), index = 0; index < m_leastUsedBucketUsed && it != mp_history->end(); it++, index++ )
     {
-        float calculated_jaccard = averageJaccardInColumn( *it, set_input );
-        if( calculated_jaccard > best_value )
+        float average;
+        float best_in_column;
+        JaccardStatsInColumn( *it, set_input, average, best_in_column);
+        if( average > best_value )
         {
             best_index = index;
-            best_value = calculated_jaccard;
+            best_value = average;
             best_location = *it;
         }
+        // it was found that by looking at the max value in a column results in poor archiving.
     }
 
     // this if statment is used if not all the buckets have been filled or if
@@ -89,7 +92,7 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
           best_location = mp_history->at( best_index );
 
           ++m_leastUsedBucketUsed;
-          m_threshold *=  0.8;
+          //m_threshold *=  0.95;
     }
 
     // after the two loops, we should have the bucket to place the set
