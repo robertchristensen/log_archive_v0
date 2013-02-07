@@ -9,6 +9,7 @@ ThreadSafeQueue::ThreadSafeQueue()
 {
     mp_backend = new deque<void*>( );
     pthread_mutex_init(&m_accessMutex, NULL);
+    sem_init(&m_available, 0, 0);
 }
 
 ThreadSafeQueue::~ThreadSafeQueue()
@@ -38,6 +39,7 @@ int ThreadSafeQueue::size( ) const
 
 void* ThreadSafeQueue::pop_front( )
 {
+    sem_wait( &m_available );
     pthread_mutex_lock( &m_accessMutex );
     void* toRet = mp_backend->front( );
     mp_backend->pop_front( );
@@ -46,25 +48,27 @@ void* ThreadSafeQueue::pop_front( )
     return toRet;
 }
 
-void* ThreadSafeQueue::back( )
-{
-    pthread_mutex_lock( &m_accessMutex );
-    void* toRet = mp_backend->back( );
-    pthread_mutex_unlock( &m_accessMutex );
+//void* ThreadSafeQueue::back( )
+//{
+//    pthread_mutex_lock( &m_accessMutex );
+//    void* toRet = mp_backend->back( );
+//    pthread_mutex_unlock( &m_accessMutex );
 
-    return toRet;
-}
+//    return toRet;
+//}
 
 void ThreadSafeQueue::push( void* x)
 {
     pthread_mutex_lock( &m_accessMutex );
     mp_backend->push_back( x );
+    sem_post( &m_available );
     pthread_mutex_unlock( &m_accessMutex );
 }
 
-void ThreadSafeQueue::pop( )
-{
-    pthread_mutex_lock( &m_accessMutex );
-    mp_backend->pop_front( );
-    pthread_mutex_unlock( &m_accessMutex );
-}
+//void ThreadSafeQueue::pop( )
+//{
+//    sem_wait( )
+//    pthread_mutex_lock( &m_accessMutex );
+//    mp_backend->pop_front( );
+//    pthread_mutex_unlock( &m_accessMutex );
+//}

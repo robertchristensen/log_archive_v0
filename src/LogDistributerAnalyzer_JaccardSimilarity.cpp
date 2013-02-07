@@ -38,6 +38,19 @@ LogDistributerAnalyzer_JaccardSimilarity::LogDistributerAnalyzer_JaccardSimilari
     {
         *it = new list< set<string>* >();
     }
+
+    // initialize thread stuff
+    mp_threadQueue = new ThreadSafeQueue( );
+    t_arg.mp_queue = mp_threadQueue;
+
+    for(int i=0; i<MAX_THREAD_COUNT; i++)
+    {
+        int rc = pthread_create(&threads[i], NULL, ThreadRunner, (void *) &t_arg);//pthread_t threads[MAX_THREAD_COUNT];
+        if (rc){
+            cerr << "ERROR: unable to create a mapper thread" << endl;
+            exit(-1);
+        }
+    }
 }
 
 LogDistributerAnalyzer_JaccardSimilarity::~LogDistributerAnalyzer_JaccardSimilarity()
@@ -178,4 +191,78 @@ void LogDistributerAnalyzer_JaccardSimilarity::makeParsedSet(const std::string& 
         startidx = endidx+1;
         endidx = input.find_first_of(seperators, startidx+1);
     }
+}
+
+void *LogDistributerAnalyzer_JaccardSimilarity::ThreadRunner( void * arg )
+{
+    ThreadInit* t_arg = (ThreadInit*) arg;
+    ThreadArguments* input;
+
+    while( true )
+    {
+        input = (ThreadArguments*)t_arg->mp_queue->pop_front( );
+
+        // if this thread is supposed to die, it should imediatly die
+        if(input->kill_thread)
+            break;
+
+        // otherwise, perform the required computation:
+        *(input->write_location) = averageJaccardInColumn(input->p_column, input->p_compareSet);
+
+        // after the thread is done with the work, it marks the indicator that is is done by releasing the semiphore.
+        sem_post( input->complete_indicator );
+
+        // when this is done, it will cycle back around to get more work.
+    }
+
+    pthread_exit((void*) 0);
+}
+
+int LogDistributerAnalyzer_JaccardSimilarity::ThreadedBestBucket( const std::set<std::string>* input_set )
+{
+    int data_sets = mp_history->size();
+    float best_value = 0.0;
+    int   best_index = 0;
+
+
+    // setup semiphore
+    //sem_t work_indicator;
+    //sem_init(&work_indicator, 0, )
+    sem_t* semiph = new sem_t[data_sets];
+    for(int i=0; i<data_sets; i++)
+        sem_init(&semiph[i], 0, 0);
+
+    // setup thread arguments
+    float *retVals = new float[data_sets];
+    ThreadArguments *args = new ThreadArguments[data_sets];
+    for(int i=0; i<data_sets; i++)
+    {
+        args[i].p_column = mp_history->at(i);
+        args[i].p_compareSet = input_set;
+        args[i].write_location = &retVals[i];
+        args[i].complete_indicator = &semiph[i];
+        args[i].kill_thread = false;
+
+        // push the thread arguments to the queue
+        mp_threadQueue->push(&args[i]);
+    }
+
+    // wait for semiphore
+    for(int i=0; i<data_sets; i++)
+    {
+        sem_wait(&semiph[i]);
+
+        if( retVals[i] > best_value )
+        {
+            best_index = i;
+            best_value = retVals[i];
+        }
+    }
+
+    // clean up data
+    delete []semiph;
+    delete []retVals;
+    delete []args;
+
+    return best_index;
 }

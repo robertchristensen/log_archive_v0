@@ -69,7 +69,7 @@ int LogDistributer::close()
 
 int LogDistributer::insert(char *str, int size)
 {
-    const int index_size = 5;
+    //const int index_size = 5;
 
     // TODO: it would increase the speed of the algorithm to not dynamically allocate memmory
     //char *tmp_str = new char[index_size + size];

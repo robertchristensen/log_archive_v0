@@ -2,6 +2,7 @@
 #define LOGDISTRIBUTERANALYZER_JACCARDSIMILARITY_H
 
 #include "../include/LogDistributerAnalyzer.h"
+#include "../include/ThreadSafeQueue.h"
 
 #include <set>
 #include <vector>
@@ -10,8 +11,9 @@
 #include <inttypes.h>
 
 #include <pthread.h>
+#include <semaphore.h>
 
-#define MAX_THREAD_COUNT (8)
+#define MAX_THREAD_COUNT (1)
 
 
 class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
@@ -23,13 +25,34 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
         virtual int getBucket(const std::string&);
         virtual int getBucket(const char*);
     protected:
+        struct ThreadArguments
+        {
+            const std::list< std::set<std::string>* >* p_column;
+            const std::set<std::string>* p_compareSet;
+            float* write_location;
+            sem_t* complete_indicator;
+            bool kill_thread; // this is true if the thread should die before processing the input
+        };
+
+        struct ThreadInit
+        {
+            ThreadSafeQueue *mp_queue;
+        };
 
     private:
         void makeParsedSet(const std::string&, std::set<std::string>*) const;
         static float averageJaccardInColumn(const std::list< std::set<std::string>* >* input, const std::set<std::string>* compare);
         static float bestJaccardInColumn(const std::list< std::set<std::string>* >* input, const std::set<std::string>* compare);
-
         static void JaccardStatsInColumn(const std::list< std::set<std::string>* >* input, const std::set<std::string>* compare, float &average, float &best);
+
+        static void *ThreadRunner( void * arg );
+        int ThreadedBestBucket( const std::set<std::string>* input_set );
+
+        pthread_t threads[MAX_THREAD_COUNT];
+        ThreadSafeQueue *mp_threadQueue;
+        ThreadInit t_arg;
+        //sem_t thread_work_queued;
+
 
         int64_t m_stringsDistributed;
         int m_bucketcount;
