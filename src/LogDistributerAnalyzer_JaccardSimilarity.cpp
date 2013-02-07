@@ -55,6 +55,17 @@ LogDistributerAnalyzer_JaccardSimilarity::LogDistributerAnalyzer_JaccardSimilari
 
 LogDistributerAnalyzer_JaccardSimilarity::~LogDistributerAnalyzer_JaccardSimilarity()
 {
+    // issue to kill all the threads
+    // note: as of right now, there is a memory leak.  It is assumed that this is issued
+    //   near the end of the program lifetime.  The memroy leak is also very small, but at least
+    //   the threads have died.
+    ThreadArguments *tmp = new ThreadArguments;
+    tmp->kill_thread = true;
+    for(int i=0; i<MAX_THREAD_COUNT; i++)
+        mp_threadQueue->push(&tmp);
+
+    sleep(0);
+
     vector< list< set<string>* >* >::iterator it_v;
     for(it_v = mp_history->begin(); it_v != mp_history->end(); ++it_v)
     {
@@ -83,35 +94,34 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
     set<string>* set_input = new set<string>();
     makeParsedSet(input, set_input);
 
-    vector< list< set<string>* >* >::iterator it;
-    for( it = mp_history->begin(), index = 0; index < m_leastUsedBucketUsed && it != mp_history->end(); it++, index++ )
-    {
-        float average;
-        float best_in_column;
-        JaccardStatsInColumn( *it, set_input, average, best_in_column);
-        if( average > best_value )
-        {
-            best_index = index;
-            best_value = average;
-            best_location = *it;
-        }
-        // it was found that by looking at the max value in a column results in poor archiving.
-    }
+    best_index = this->ThreadedBestBucket( set_input, best_value );
+
+//    vector< list< set<string>* >* >::iterator it;
+//    for( it = mp_history->begin(), index = 0; index < m_leastUsedBucketUsed && it != mp_history->end(); it++, index++ )
+//    {
+//        float average;
+//        float best_in_column;
+//        JaccardStatsInColumn( *it, set_input, average, best_in_column);
+//        if( average > best_value )
+//        {
+//            best_index = index;
+//            best_value = average;
+//            best_location = *it;
+//        }
+//    }
 
     // this if statment is used if not all the buckets have been filled or if
     // no similarity is detected.  So similartiy detected should rarely happen.
-    if( best_location == NULL ){
+    if( best_index == -1 || best_location == NULL ){
           best_index = m_leastUsedBucketUsed % mp_history->size();
-          best_location = mp_history->at( best_index );
 
           ++m_leastUsedBucketUsed;
           //m_threshold *=  0.95;
     }
 
-    // after the two loops, we should have the bucket to place the set
-
-    //mp_last_time_used->at(best_index) = ++m_stringsDistributed;
+    best_location = mp_history->at( best_index );
     best_location->push_front( set_input );
+
 
     // remove the last element in the history if it exists, to keep the number of records maintanable
     while(best_location->size() > m_historyDepth)
@@ -218,11 +228,11 @@ void *LogDistributerAnalyzer_JaccardSimilarity::ThreadRunner( void * arg )
     pthread_exit((void*) 0);
 }
 
-int LogDistributerAnalyzer_JaccardSimilarity::ThreadedBestBucket( const std::set<std::string>* input_set )
+int LogDistributerAnalyzer_JaccardSimilarity::ThreadedBestBucket( const std::set<std::string>* input_set, float best_value )
 {
-    int data_sets = mp_history->size();
-    float best_value = 0.0;
-    int   best_index = 0;
+    int data_sets = min((int)mp_history->size(), m_leastUsedBucketUsed);
+    //float best_value = 0.0;
+    int   best_index = -1;
 
 
     // setup semiphore

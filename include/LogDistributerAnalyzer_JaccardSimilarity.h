@@ -13,7 +13,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#define MAX_THREAD_COUNT (1)
+#define MAX_THREAD_COUNT (2)
 
 
 class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
@@ -46,7 +46,7 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
         static void JaccardStatsInColumn(const std::list< std::set<std::string>* >* input, const std::set<std::string>* compare, float &average, float &best);
 
         static void *ThreadRunner( void * arg );
-        int ThreadedBestBucket( const std::set<std::string>* input_set );
+        int ThreadedBestBucket( const std::set<std::string>* input_set, float minimum_value );
 
         pthread_t threads[MAX_THREAD_COUNT];
         ThreadSafeQueue *mp_threadQueue;

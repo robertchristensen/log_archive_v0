@@ -8,6 +8,8 @@
 class LogDistributerAnalyzer
 {
 public:
+    virtual ~LogDistributerAnalyzer( ) { };
+
     virtual int getBucket(const std::string&) = 0;
     virtual int getBucket(const char*) = 0;
 private:
