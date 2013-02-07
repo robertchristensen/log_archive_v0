@@ -26,6 +26,7 @@ LogDistributerAnalyzer_JaccardSimilarity::LogDistributerAnalyzer_JaccardSimilari
 ,  m_lastTimeBucketUsed(0)
 ,  m_maxleastBucketUsed(0)
 ,  m_avgleadBucketUsed(0.0)
+,  m_threshold(default_threshold)
 {
     if(m_historyDepth <= 0)
         m_historyDepth = history_depth_default;
@@ -59,7 +60,7 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
     int best_index = -1;
     int index = 0;
     list< set<string>* >* best_location = NULL;
-    float best_value = threshold; // we only want to consiter the bucket if it is better then the min threshold
+    float best_value = m_threshold; // we only want to consiter the bucket if it is better then the min threshold
 
     // if all the buckets have already been used, it would be best to place the entry
     // in whatever bucket it would work best in.
@@ -70,7 +71,7 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
     makeParsedSet(input, set_input);
 
     vector< list< set<string>* >* >::iterator it;
-    for( it = mp_history->begin(), index = 0; it != mp_history->end(); it++, index++ )
+    for( it = mp_history->begin(), index = 0; index < m_leastUsedBucketUsed && it != mp_history->end(); it++, index++ )
     {
         float calculated_jaccard = averageJaccardInColumn( *it, set_input );
         if( calculated_jaccard > best_value )
@@ -88,6 +89,7 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
           best_location = mp_history->at( best_index );
 
           ++m_leastUsedBucketUsed;
+          m_threshold *=  0.8;
     }
 
     // after the two loops, we should have the bucket to place the set

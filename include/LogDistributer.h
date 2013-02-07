@@ -2,6 +2,7 @@
 #define LOGDISTRIBUTER_H
 
 #include <inttypes.h>
+#include <vector>
 #include "../include/LogArchiver.h"
 #include "../include/LogDistributerAnalyzer.h"
 
@@ -21,9 +22,10 @@ public:
     static int JACCARD_HISTORY;
 protected:
 private:
-    LogArchiver **mp_archivers;
+    //LogArchiver **mp_archivers;
+    std::vector<LogArchiver*> *mp_archivers;
     LogDistributerAnalyzer *mp_analyzer;
-    int m_numberOfArchivers;
+    //int m_numberOfArchivers;
 
     int64_t m_index;
 

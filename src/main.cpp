@@ -14,7 +14,7 @@ using namespace std;
 
 int INPUT_BUFFER_SIZE = 200000;
 int DECOMPRESS = 0;
-int BUCKETS = 2;
+int BUCKETS = 8;
 LogDistributer::DistributerType DISTRIBUTER = LogDistributer::JACCARD;
 bool quite = false;
 

@@ -6,11 +6,14 @@
 #include "../include/LogDistributerAnalyzer_JaccardSimilarity.h"
 
 #include <cstring>
+#include <vector>
+
+using namespace std;
 
 int LogDistributer::JACCARD_HISTORY = -1;
 
 LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
-: m_numberOfArchivers(num_archivers),
+: //m_numberOfArchivers(num_archivers),
   m_index(0),
   m_closed(0)
 {
@@ -28,9 +31,14 @@ LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
         default:
             mp_analyzer = new LogDistributerAnalyzer_RoundRobin(num_archivers);
     }
-    mp_archivers = new LogArchiver*[m_numberOfArchivers];
-    for(int i=0; i<m_numberOfArchivers; i++)
-        mp_archivers[i] = new LogArchiver(i);
+    //mp_archivers = new LogArchiver*[m_numberOfArchivers];
+    //for(int i=0; i<m_numberOfArchivers; i++)
+    //    mp_archivers[i] = new LogArchiver(i);
+    mp_archivers = new vector<LogArchiver*>( );
+//    for( int i=0 ; i < num_archivers ; i++ )
+//    {
+//        mp_archivers->push_back(new LogArchiver(i));
+//    }
 }
 
 LogDistributer::~LogDistributer()
@@ -38,10 +46,11 @@ LogDistributer::~LogDistributer()
     if(m_closed != true)
         this->close();
 
-    for(int i=0; i<m_numberOfArchivers; i++)
-        delete mp_archivers[i];
+    vector<LogArchiver*>::iterator it = mp_archivers->begin();
+    for( ; it != mp_archivers->end() ; it++ )
+        delete *it;
 
-    delete []mp_archivers;
+    delete mp_archivers;
     delete mp_analyzer;
 }
 
@@ -51,8 +60,9 @@ int LogDistributer::close()
         return 0;
 
     m_closed = true;
-    for(int i=0; i<m_numberOfArchivers; i++)
-        mp_archivers[i]->close();
+    vector<LogArchiver*>::iterator it = mp_archivers->begin();
+    for( ; it != mp_archivers->end() ; it++)
+        (*it)->close();
 
     return 0;
 }
@@ -65,12 +75,19 @@ int LogDistributer::insert(char *str, int size)
     // find string similarity before repacking
     int bucket = mp_analyzer->getBucket(str);
 
+    // this will happen when we need to add a new bucket.
+    if(bucket == mp_archivers->size())
+    {
+        mp_archivers->push_back(new LogArchiver(bucket));
+
+    }
+
     // insert index at the begining of the array, then place the string at the end
     //*((int64_t*) tmp_str) = m_index++;
     //memcpy(tmp_str + sizeof(m_index), str, size);
 
     //int retVal = mp_archivers[bucket]->InsertRecord(tmp_str, size + sizeof(m_index));
-    int retVal = mp_archivers[bucket]->InsertRecord(str, size);
+    int retVal = mp_archivers->at(bucket)->InsertRecord(str, size);
 
     //delete []tmp_str;
 
