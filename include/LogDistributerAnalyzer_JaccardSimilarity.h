@@ -11,6 +11,8 @@
 
 #include <pthread.h>
 
+#define MAX_THREAD_COUNT (8)
+
 
 class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
 {
