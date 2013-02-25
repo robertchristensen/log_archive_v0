@@ -10,6 +10,7 @@ class LogArchiver
 {
 public:
     LogArchiver(int instance);
+    LogArchiver(char* name);
     virtual ~LogArchiver();
 
     int InsertRecord(char *str, int size);

@@ -9,7 +9,7 @@
 class LogDistributer
 {
 public:
-    enum DistributerType { ROUND_ROBIN, EDIT_DISTANCE, JACCARD };
+    enum DistributerType { ROUND_ROBIN, EDIT_DISTANCE, JACCARD, CHAR };
 
 
     LogDistributer(int num_archivers, DistributerType distrib = ROUND_ROBIN);
@@ -22,10 +22,10 @@ public:
     static int JACCARD_HISTORY;
 protected:
 private:
-    //LogArchiver **mp_archivers;
     std::vector<LogArchiver*> *mp_archivers;
     LogDistributerAnalyzer *mp_analyzer;
-    //int m_numberOfArchivers;
+
+    LogArchiver* mp_index;
 
     int m_index;
 

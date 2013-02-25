@@ -13,13 +13,13 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#define MAX_THREAD_COUNT (2)
+#define MAX_THREAD_COUNT (8)
 
 
 class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
 {
     public:
-        LogDistributerAnalyzer_JaccardSimilarity(int buckets, int depth = 0);
+        LogDistributerAnalyzer_JaccardSimilarity(int buckets, int depth = 1);
         virtual ~LogDistributerAnalyzer_JaccardSimilarity();
 
         virtual int getBucket(const std::string&);

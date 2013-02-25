@@ -37,6 +37,34 @@ LogArchiver::LogArchiver(int instance)
     }
 }
 
+LogArchiver::LogArchiver(char *name)
+: m_instance(),
+  closed(false)
+{
+    ++instances;
+
+    int returnValue;
+    char fileName[16];
+    snprintf(fileName, 16, "%s.bz", name);
+
+    mp_rawFileOut = fopen(fileName, "w");
+    if(mp_rawFileOut == NULL)
+    {
+        cerr << "ERROR opening file " << fileName << " to write!" << endl;
+        closed = true;
+        return;
+    }
+
+    mp_bzip2File = BZ2_bzWriteOpen(&returnValue, mp_rawFileOut, blockSize, verbosity, workFactor);
+    if(returnValue != BZ_OK)
+    {
+        cerr << "ERROR creating archiver";
+        fclose(mp_rawFileOut);
+        closed = true;
+        return;
+    }
+}
+
 LogArchiver::~LogArchiver()
 {
     if(closed != true)

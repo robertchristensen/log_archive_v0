@@ -16,7 +16,7 @@
 
 using namespace std;
 
-char* LogDistributerAnalyzer_JaccardSimilarity::seperators = " \t\n:.\\/@[]();\"&=-";
+char* LogDistributerAnalyzer_JaccardSimilarity::seperators = " \t\n:.\\/@[]();\"\'&=-";
 
 LogDistributerAnalyzer_JaccardSimilarity::LogDistributerAnalyzer_JaccardSimilarity(int buckets, int depth)
 :  m_stringsDistributed(0)
@@ -40,17 +40,17 @@ LogDistributerAnalyzer_JaccardSimilarity::LogDistributerAnalyzer_JaccardSimilari
     }
 
     // initialize thread stuff
-    mp_threadQueue = new ThreadSafeQueue( );
-    t_arg.mp_queue = mp_threadQueue;
+    //mp_threadQueue = new ThreadSafeQueue( );
+    //t_arg.mp_queue = mp_threadQueue;
 
-    for(int i=0; i<MAX_THREAD_COUNT; i++)
-    {
-        int rc = pthread_create(&threads[i], NULL, ThreadRunner, (void *) &t_arg);//pthread_t threads[MAX_THREAD_COUNT];
-        if (rc){
-            cerr << "ERROR: unable to create a mapper thread" << endl;
-            exit(-1);
-        }
-    }
+    //for(int i=0; i<MAX_THREAD_COUNT; i++)
+    //{
+    //    int rc = pthread_create(&threads[i], NULL, ThreadRunner, (void *) &t_arg);//pthread_t threads[MAX_THREAD_COUNT];
+    //    if (rc){
+    //        cerr << "ERROR: unable to create a mapper thread" << endl;
+    //        exit(-1);
+    //    }
+    //}
 }
 
 LogDistributerAnalyzer_JaccardSimilarity::~LogDistributerAnalyzer_JaccardSimilarity()
@@ -59,10 +59,10 @@ LogDistributerAnalyzer_JaccardSimilarity::~LogDistributerAnalyzer_JaccardSimilar
     // note: as of right now, there is a memory leak.  It is assumed that this is issued
     //   near the end of the program lifetime.  The memroy leak is also very small, but at least
     //   the threads have died.
-    ThreadArguments *tmp = new ThreadArguments;
-    tmp->kill_thread = true;
-    for(int i=0; i<MAX_THREAD_COUNT; i++)
-        mp_threadQueue->push(&tmp);
+    //ThreadArguments *tmp = new ThreadArguments;
+    //tmp->kill_thread = true;
+    //for(int i=0; i<MAX_THREAD_COUNT; i++)
+    //    mp_threadQueue->push(&tmp);
 
     sleep(0);
 
@@ -94,21 +94,21 @@ int LogDistributerAnalyzer_JaccardSimilarity::getBucket(const std::string& input
     set<string>* set_input = new set<string>();
     makeParsedSet(input, set_input);
 
-    best_index = this->ThreadedBestBucket( set_input, best_value );
+//    best_index = this->ThreadedBestBucket( set_input, best_value );
 
-//    vector< list< set<string>* >* >::iterator it;
-//    for( it = mp_history->begin(), index = 0; index < m_leastUsedBucketUsed && it != mp_history->end(); it++, index++ )
-//    {
-//        float average;
-//        float best_in_column;
-//        JaccardStatsInColumn( *it, set_input, average, best_in_column);
-//        if( average > best_value )
-//        {
-//            best_index = index;
-//            best_value = average;
-//            best_location = *it;
-//        }
-//    }
+    vector< list< set<string>* >* >::iterator it;
+    for( it = mp_history->begin(), index = 0; index < m_leastUsedBucketUsed && it != mp_history->end(); it++, index++ )
+    {
+        float average;
+        float best_in_column;
+        JaccardStatsInColumn( *it, set_input, average, best_in_column);
+        if( average > best_value )
+        {
+            best_index = index;
+            best_value = average;
+            best_location = *it;
+        }
+    }
 
     // this if statment is used if not all the buckets have been filled or if
     // no similarity is detected.  So similartiy detected should rarely happen.
@@ -166,8 +166,8 @@ void LogDistributerAnalyzer_JaccardSimilarity::JaccardStatsInColumn(const std::l
                                                                     float &best)
 {
     int count = 0;
-    average = 0;
-    best    = 0;
+    average = 0.0;
+    best    = 0.0;
 
     list< set<string>* >::const_iterator it = input->begin();
     for(; it != input->end(); it++)

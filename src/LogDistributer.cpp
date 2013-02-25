@@ -4,6 +4,7 @@
 #include "../include/LogDistributerAnalyzer_RoundRobin.h"
 #include "../include/LogDistributerAnalyzer_EditDistance.h"
 #include "../include/LogDistributerAnalyzer_JaccardSimilarity.h"
+#include "../include/LogDistributerAnalyzer_characterSimilarity.h"
 
 #include <cstring>
 #include <vector>
@@ -28,17 +29,14 @@ LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
         case JACCARD:
             mp_analyzer = new LogDistributerAnalyzer_JaccardSimilarity(num_archivers, JACCARD_HISTORY);
             break;
+        case CHAR:
+            mp_analyzer = new LogDistributerAnalyzer_characterSimilarity(num_archivers, JACCARD_HISTORY);
+            break;
         default:
             mp_analyzer = new LogDistributerAnalyzer_RoundRobin(num_archivers);
     }
-    //mp_archivers = new LogArchiver*[m_numberOfArchivers];
-    //for(int i=0; i<m_numberOfArchivers; i++)
-    //    mp_archivers[i] = new LogArchiver(i);
     mp_archivers = new vector<LogArchiver*>( );
-//    for( int i=0 ; i < num_archivers ; i++ )
-//    {
-//        mp_archivers->push_back(new LogArchiver(i));
-//    }
+    mp_index = new LogArchiver("index");
 }
 
 LogDistributer::~LogDistributer()
@@ -52,6 +50,7 @@ LogDistributer::~LogDistributer()
 
     delete mp_archivers;
     delete mp_analyzer;
+    delete mp_index;
 }
 
 int LogDistributer::close()
@@ -76,6 +75,7 @@ int LogDistributer::insert(char *str, int size)
 
     // find string similarity before repacking
     int bucket = mp_analyzer->getBucket(str);
+    char b = (char) bucket;
 
     // this will happen when we need to add a new bucket.
     if(bucket == mp_archivers->size())
@@ -93,6 +93,8 @@ int LogDistributer::insert(char *str, int size)
 
     //int retVal = mp_archivers->at(bucket)->InsertRecord(tmp_str, size + index_size);
     int retVal = mp_archivers->at(bucket)->InsertRecord(str, size);
+
+    mp_index->InsertRecord( &b, 1 );
 
     //delete []tmp_str;
 
