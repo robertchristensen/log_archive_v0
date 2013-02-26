@@ -5,13 +5,14 @@
 #include "../include/LogDistributerAnalyzer_EditDistance.h"
 #include "../include/LogDistributerAnalyzer_JaccardSimilarity.h"
 #include "../include/LogDistributerAnalyzer_characterSimilarity.h"
+#include "../include/LogDistributerAnalyzer_JaccardEstimator.h"
 
 #include <cstring>
 #include <vector>
 
 using namespace std;
 
-int LogDistributer::JACCARD_HISTORY = -1;
+int LogDistributer::JACCARD_HISTORY = 5;
 
 LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
 : //m_numberOfArchivers(num_archivers),
@@ -31,6 +32,9 @@ LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
             break;
         case CHAR:
             mp_analyzer = new LogDistributerAnalyzer_characterSimilarity(num_archivers, JACCARD_HISTORY);
+            break;
+        case JAC_EST:
+            mp_analyzer = new LogDistributerAnalyzer_JaccardEstimator(num_archivers, JACCARD_HISTORY, 10);
             break;
         default:
             mp_analyzer = new LogDistributerAnalyzer_RoundRobin(num_archivers);

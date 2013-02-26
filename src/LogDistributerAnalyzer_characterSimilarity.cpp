@@ -71,7 +71,7 @@ int LogDistributerAnalyzer_characterSimilarity::getBucket(const char* str)
         bestBucket = m_usedBuckets++;
     }
 
-    // cleanup and inert the new record into the appropreate location.
+    // cleanup and insert the new record into the appropreate location.
     mp_history->at( bestBucket )->push_front( to_insert );
 
     // remove the last element in the history if it exists, to keep the number of records maintanable

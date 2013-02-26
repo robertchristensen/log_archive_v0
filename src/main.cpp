@@ -15,7 +15,7 @@ using namespace std;
 int INPUT_BUFFER_SIZE = 200000;
 int DECOMPRESS = 0;
 int BUCKETS = 8;
-LogDistributer::DistributerType DISTRIBUTER = LogDistributer::CHAR;
+LogDistributer::DistributerType DISTRIBUTER = LogDistributer::JAC_EST;
 bool quite = false;
 
 
@@ -99,6 +99,11 @@ void parseInput(int argc, char**argv)
             i++;
             DISTRIBUTER = LogDistributer::CHAR;
         }
+        else if(strcmp("--est", argv[i]) == 0)
+        {
+            i++;
+            DISTRIBUTER = LogDistributer::JAC_EST;
+        }
         else if(strcmp("--jhistory", argv[i]) == 0)
         {
             i++;
@@ -156,8 +161,8 @@ int main(int argc, char **argv)
 
             ++totalLines;
             logger->insert(inputBuffer, size);
-            if(!quite && totalLines % 503 == 0)
-                cerr << '\r' << totalLines << '\r';
+            if(!quite && totalLines % 137 == 0)
+                cerr << '\r' << totalLines;// << '\r';
         }while(!cin.eof());
 
         if(!quite)

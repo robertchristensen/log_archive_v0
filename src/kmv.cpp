@@ -1,11 +1,11 @@
 #include "../include/kmv.h"
 kmv::kmv(int size)
+  : k(size),
+    DV(0)
 {
   memset(AESkey,0,KEYSIZE);
   strcat(AESkey,"1234567890123456");
   oRijndael.MakeKey(AESkey, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 16, 16);
-  k=size;
-  DV=0;
 }
 
 void kmv::buildkmv(vector<string> & V)
@@ -15,18 +15,25 @@ void kmv::buildkmv(vector<string> & V)
       cerr<<"Data size < K."<<endl;
       exit(-1);
       }*/
+  // buildkmv builds the kmv from scratch.  All data structures should be
+  // empty
+ // U.clear();
+ // UK.clear();
+ // k = max_k;
+
   char *char_arry=NULL;
   char szHex[5]="";
 
   for(uint i=0;i<V.size();i++)
     {
       unsigned message_digest[5];
-      string str="", str1=V[i];
+      string str="";
+      string str1=V[i];
       char *mssge=new char[41];
       memset(mssge,0,41);
 
       sha.Reset();
-      sha<<str1.data();
+      sha << str1.data();
       if (!sha.Result(message_digest))
 	{
 	  cerr << "ERROR-- could not compute message digest" << endl;
@@ -60,8 +67,8 @@ void kmv::buildkmv(vector<string> & V)
 	  if(UK.find(szHex)!=UK.end())
 	    UK[szHex]++;
 	}
-      free(mssge);
-      free(char_arry);
+      delete[] mssge;
+      delete[] char_arry;
     }
   map<AESHASH,uint>::iterator it=UK.end();
   k=UK.size();
@@ -80,7 +87,7 @@ void kmv::printD()
   cout<<Distinct_Size<<endl;
 }
 
-void kmv::DVunion(vector<kmv> & KV, kmv & N)
+void kmv::DVunion(const vector<kmv> & KV, kmv & N)
 {
   uint NewK=KV[0].k;
   map<AESHASH,uint> NewU;
@@ -104,11 +111,36 @@ void kmv::DVunion(vector<kmv> & KV, kmv & N)
   N.Distinct_Size=0;
 }
 
+void kmv::DVunion(const vector<kmv*> & KV, kmv & N)
+{
+  uint NewK=KV[0]->k;
+  map<AESHASH,uint> NewU;
+  map<AESHASH,uint>::iterator it;
+  for(uint i=0;i<KV.size();i++)
+    {
+      if(NewK>KV[i]->k)
+	NewK=KV[i]->k;
+      NewU.insert(KV[i]->UK.begin(),KV[i]->UK.end());
+    }
+  N.k=NewK;
+  uint counter=NewK;
+  it=NewU.begin();
+  while(counter)
+    {
+      counter--;
+      it++;
+    }
+  N.UK.insert(NewU.begin(),it);
+  N.DV=kmv::computeDV((*(--it)).first,NewK);
+  N.Distinct_Size=0;
+}
+
 uint kmv::DVintersection(vector<kmv> & KV)
 {
   kmv N(0), UUnion(0);
   DVunion(KV, UUnion);
-  uint K=UUnion.k, size=KV.size();
+  uint K = UUnion.k;
+  uint size = KV.size();
   map<AESHASH,uint> UIntersect;
   map<AESHASH,uint>::iterator vis;
   vector<AESHASH> tmp;
@@ -136,6 +168,80 @@ uint kmv::DVintersection(vector<kmv> & KV)
     UIntersect[*cur]=0;
 
   return (uint)((double(UIntersect.size())/(double)K)*UUnion.DV);
+}
+
+uint kmv::DVintersection(const vector<kmv*> & KV)
+{
+  kmv N(0), UUnion(0);
+  DVunion(KV, UUnion);
+  uint K = UUnion.k;
+  uint size = KV.size();
+  map<AESHASH,uint> UIntersect;
+  map<AESHASH,uint>::iterator vis;
+  vector<AESHASH> tmp;
+  vector<AESHASH>::iterator it, cur;
+  for(uint i=0;i<size;i++)
+    {
+      for(vis = KV[i]->UK.begin() ; vis!=KV[i]->UK.end() ; ++vis)
+	tmp.push_back((*vis).first);
+    }
+  /*for(vis=UUnion.UK.begin(); vis!=UUnion.UK.end();++vis)
+    {
+      tmp.push_back((*vis).first);
+      }*/
+  sort(tmp.begin(), tmp.end());
+  for(it = tmp.begin(), cur=it; it!=tmp.end(); ++it)
+    {
+      if((*it)!=(*cur))
+	{
+	  if(it-cur==size)
+	    UIntersect[*cur]=0;
+	  cur=it;
+	}
+    }
+  if(it-cur==size)
+    UIntersect[*cur]=0;
+
+  return (uint)((double(UIntersect.size())/(double)K)*UUnion.DV);
+  //return (float) ((float) UIntersect.size()) / ((float) K) * UUnion.DV;
+}
+
+float kmv::DVJaccardEst(const vector<kmv*> & KV)
+{
+  kmv UUnion(0);
+  DVunion(KV, UUnion);
+  uint K = UUnion.k;
+  uint size = KV.size();
+  map<AESHASH,uint> UIntersect;
+  map<AESHASH,uint>::iterator vis;
+  vector<AESHASH> tmp;
+  vector<AESHASH>::iterator it, cur;
+  for(uint i=0;i<size;i++)
+  {
+      for(vis = KV[i]->UK.begin() ; vis!=KV[i]->UK.end() ; ++vis)
+	    tmp.push_back((*vis).first);
+  }
+  /*for(vis=UUnion.UK.begin(); vis!=UUnion.UK.end();++vis)
+    {
+      tmp.push_back((*vis).first);
+      }*/
+  sort(tmp.begin(), tmp.end());
+  for(it = tmp.begin(), cur=it; it!=tmp.end(); ++it)
+  {
+    if((*it)!=(*cur))
+	{
+	  if(it-cur==size)
+	    UIntersect[*cur]=0;
+	  cur=it;
+	}
+  }
+  if(it-cur==size)
+    UIntersect[*cur]=0;
+
+  float Isize = (uint)((double(UIntersect.size())/(double)K)*UUnion.DV);
+
+  //return (float) ((float) UIntersect.size()) / ((float) K) * UUnion.DV;
+  return (Isize) / (UUnion.DV);
 }
 
 uint kmv::computeDV(AESHASH uk, uint & kv)
@@ -183,10 +289,10 @@ void kmv::printAKMV(map<AESHASH,uint> & H)
 
 void kmv::AFMVintersection(vector<kmv> & KV, kmv & objkmv)
 {
-  uint ke=0;
+  uint ke = 0;
   kmv tmp(0), AKMVSect(0);
   map<AESHASH,uint>::iterator vis;
-  AKMVSect=KV.back();
+  AKMVSect = KV.back();
   KV.pop_back();
   while(KV.size())
     {
@@ -196,25 +302,26 @@ void kmv::AFMVintersection(vector<kmv> & KV, kmv & objkmv)
       KV.pop_back();
       kvec.push_back(AKMVSect);
       kvec.push_back(tmp);
-      DVunion(kvec,check);
-      for(vis=check.UK.begin();vis!=check.UK.end();++vis)
+      DVunion(kvec, check);
+      for(vis = check.UK.begin() ; vis != check.UK.end() ; ++vis)
 	{
-	  if(tmp.UK.find((*vis).first)==tmp.UK.end()||AKMVSect.UK.find((*vis).first)==tmp.UK.end())
+	  if(tmp.UK.find((*vis).first) == tmp.UK.end()
+          || AKMVSect.UK.find((*vis).first) == tmp.UK.end())
 	    (*vis).second=0;
 	  else
 	    {
-	      if(tmp.UK[(*vis).first]<AKMVSect.UK[(*vis).first])
+	      if(tmp.UK[(*vis).first] < AKMVSect.UK[(*vis).first])
 		(*vis).second=tmp.UK[(*vis).first];
 	      else
-		(*vis).second=AKMVSect.UK[(*vis).first];
-	      if(KV.size()==0 && (*vis).second!=0)
+		(*vis).second = AKMVSect.UK[(*vis).first];
+	      if(KV.size() == 0 && (*vis).second != 0)
 		ke++;
 	    }
 	}//for
-      AKMVSect=check;
+      AKMVSect = check;
     }//while
-  objkmv=AKMVSect;
-  objkmv.DV=uint((double)AKMVSect.DV*(double)ke/(double)objkmv.k);
+  objkmv = AKMVSect;
+  objkmv.DV = uint((double)AKMVSect.DV*(double)ke/(double)objkmv.k);
 }
 
 kmv & kmv::operator = (const kmv & a)

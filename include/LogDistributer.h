@@ -9,7 +9,7 @@
 class LogDistributer
 {
 public:
-    enum DistributerType { ROUND_ROBIN, EDIT_DISTANCE, JACCARD, CHAR };
+    enum DistributerType { ROUND_ROBIN, EDIT_DISTANCE, JACCARD, CHAR, JAC_EST };
 
 
     LogDistributer(int num_archivers, DistributerType distrib = ROUND_ROBIN);

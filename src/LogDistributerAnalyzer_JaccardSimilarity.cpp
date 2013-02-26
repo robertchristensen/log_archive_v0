@@ -16,7 +16,7 @@
 
 using namespace std;
 
-char* LogDistributerAnalyzer_JaccardSimilarity::seperators = " \t\n:.\\/@[]();\"\'&=-";
+char* LogDistributerAnalyzer_JaccardSimilarity::seperators = " \t\n:.\\/@[]();\"\'&=-,#";
 
 LogDistributerAnalyzer_JaccardSimilarity::LogDistributerAnalyzer_JaccardSimilarity(int buckets, int depth)
 :  m_stringsDistributed(0)
@@ -189,7 +189,7 @@ void LogDistributerAnalyzer_JaccardSimilarity::makeParsedSet(const std::string& 
     unsigned endidx = 0;
 
     startidx = 0;
-    endidx   = input.find_first_of(seperators, startidx+1);
+    endidx   = input.find_first_of(seperators, startidx);
     while(endidx < input.size())
     {
         // no use inserting a string with zero length
@@ -276,3 +276,4 @@ int LogDistributerAnalyzer_JaccardSimilarity::ThreadedBestBucket( const std::set
 
     return best_index;
 }
+

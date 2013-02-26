@@ -36,9 +36,19 @@ class kmv
   void buildkmv(vector<string> & V);
   void printDV();
   void printD();
-  static void DVunion(vector<kmv> & KV, kmv & objkmv);
-  static uint DVintersection(vector<kmv> & KV);
-  static void AFMVintersection(vector<kmv> & KV, kmv & objkmv);
+
+  static void DVunion(const vector<kmv> & KV, kmv & objkmv);
+  static void DVunion(const vector<kmv*> & KV, kmv & objkmv);
+
+  static uint DVintersection(vector<kmv>  & KV);
+  static uint DVintersection(const vector<kmv*> & KV);
+
+  // added by Robert Christensen
+  static float DVJaccardEst(const vector<kmv*> & KV);
+
+  static void AFMVintersection(vector<kmv>  & KV, kmv & objkmv);
+  static void AFMVintersection(vector<kmv*> & KV, kmv & objkmv);
+
   static uint computeDV(AESHASH uk, uint & kv);
   static void printAKMV(map<AESHASH,uint> & H);
   static uint IntersectCountDistinct(vector< vector<string> > & kset);
