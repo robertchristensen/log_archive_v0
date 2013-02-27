@@ -16,7 +16,7 @@ class LogRecord
         int ChangeRecord(const std::string& str);
 
 
-        int64_t getIndexNumber() const;
+        //int64_t getIndexNumber() const;
 
         //std::string getLogRecordString();
 
@@ -27,7 +27,7 @@ class LogRecord
         static bool compareGreater(const LogRecord &, const LogRecord &);
     protected:
     private:
-        int64_t m_indexValue;
+        //int64_t m_indexValue;
         std::string m_str;
 };
 

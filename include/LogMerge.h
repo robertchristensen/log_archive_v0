@@ -6,6 +6,7 @@
 #include <string>
 
 #include "../include/LogUnArchiver.h"
+#include "../include/BZIP_lineBuffer.h"
 
 class LogMerge
 {
@@ -19,6 +20,9 @@ class LogMerge
     private:
         std::vector<LogUnArchiver*> m_sources;
 
+        BZIP_lineBuffer *m_index_buffer;
+        FILE* mp_rawFileOut;
+        BZFILE* mp_bzip2File;
 };
 
 #endif // LOGMERGE_H

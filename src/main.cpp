@@ -13,7 +13,7 @@
 using namespace std;
 
 int INPUT_BUFFER_SIZE = 200000;
-int DECOMPRESS = 0;
+int DECOMPRESS = 1;
 int BUCKETS = 8;
 LogDistributer::DistributerType DISTRIBUTER = LogDistributer::JAC_EST;
 bool quite = false;
@@ -174,54 +174,14 @@ int main(int argc, char **argv)
     {
         cerr << "doing decompression" << endl;
 
-        //LogUnArchiver unlogger(0);
         LogMerge unlogger;
         string logMessage;
 
         while(unlogger.getNextRecord_string(logMessage))
             cout << logMessage;
-        //const LogRecord* reader = unlogger.get_CurrentRecord();
-        //while(!unlogger.pop())
-        //    cout << reader->getLogRecord();
-
-        //cout << "done with test" << endl;
     }
 
     cerr << "DONE" << endl;
 
     return 0;
-/*    int returnValue;
-    int blockSize = 9;
-    int verbosity = 0;
-   int workFactor = 30;
-    FILE * pFile;
-    char fileName[] = "out.bz2";
-
-
-    cout << "Just playing around with BZIP2" << endl;
-
-    cout << "opening file " << fileName << endl;
-    pFile = fopen( fileName, "w");
-    if(pFile == NULL)
-    {
-        cout << "ERROR opening file!" << endl;
-        return -1;
-    }
-
-    BZFILE *outputFile = BZ2_bzWriteOpen(&returnValue, pFile, blockSize, verbosity, workFactor);
-
-    char input[] = "\0\0\0\0";
-
-    for(int i=0; i<1000; i++)
-    {
-        BZ2_bzWrite(&returnValue, outputFile, input, 4);
-        *((int*) input) = *((int*) input) + 1;
-    }
-
-    cout << "DONE";
-
-    BZ2_bzWriteClose( &returnValue, outputFile, 0, NULL, NULL );
-
-    return 0;
-    */
 }

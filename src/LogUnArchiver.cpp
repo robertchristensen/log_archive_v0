@@ -17,7 +17,7 @@ LogUnArchiver::LogUnArchiver(int instance)
 
     int returnValue;
     char fileName[16];
-    snprintf(fileName, 16, "log%04d.log", m_instance);
+    snprintf(fileName, 16, "log%04d.txt.bz2", m_instance);
 
     mp_rawFileOut = fopen(fileName, "r");
     if(mp_rawFileOut == NULL)
@@ -94,26 +94,6 @@ int LogUnArchiver::pop( )
 const LogRecord* LogUnArchiver::get_CurrentRecord()
 {
     return mp_currentRecord;
-}
-
-bool LogUnArchiver::compareLess(const LogUnArchiver* a, const LogUnArchiver* b)
-{
-    if(a == NULL)
-        return false;
-    if(b == NULL)
-        return false;
-
-    return LogRecord::compareLess(*(a->mp_currentRecord), *(b->mp_currentRecord));
-}
-
-bool LogUnArchiver::compareGreater(const LogUnArchiver* a, const LogUnArchiver* b)
-{
-    if(a == NULL)
-        return false;
-    if(b == NULL)
-        return false;
-
-    return LogRecord::compareGreater(*(a->mp_currentRecord), *(b->mp_currentRecord));
 }
 
 bool LogUnArchiver::isAvailable( )

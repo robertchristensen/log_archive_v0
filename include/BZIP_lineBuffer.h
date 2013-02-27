@@ -13,6 +13,7 @@ class BZIP_lineBuffer
         virtual ~BZIP_lineBuffer();
 
         int ReadLine( std::string& str );
+        int ReadByte( char& val);
 
         int get_error( );
     protected:

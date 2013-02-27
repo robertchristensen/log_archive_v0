@@ -27,46 +27,56 @@ LogMerge::LogMerge()
         }
     } while(!tmpArch->isClosed());
 
-    // create a heap to maintain sorted order of the archives.
-    if(m_sources.size() == 0)
-        return; // nothing to do
+    // create the object that will read the index
+    const char* fileName = "index.bz2";
 
-    make_heap(m_sources.begin(), m_sources.end(), LogUnArchiver::compareGreater);
+    mp_rawFileOut = fopen(fileName, "r");
+    if(mp_rawFileOut == NULL)
+    {
+        cerr << "ERROR opening index file " << fileName << "!" << endl;
+        //m_closed = true;
+        //m_available = false;
+        return;
+    }
+
+    int returnValue;
+    mp_bzip2File = BZ2_bzReadOpen(&returnValue, mp_rawFileOut, 0, 0, NULL, 0);
+    if(returnValue != BZ_OK)
+    {
+        cerr << "ERROR creating unarchiver";
+        fclose(mp_rawFileOut);
+        //m_closed = true;
+        return;
+    }
+    m_index_buffer = new BZIP_lineBuffer(mp_bzip2File);
 }
 
 LogMerge::~LogMerge()
 {
     for(size_t i=0; i<m_sources.size(); i++)
         delete m_sources[i];
+
+    delete m_index_buffer;
+
+    int returnValue;
+    BZ2_bzReadClose( &returnValue, mp_bzip2File );
+    fclose(mp_rawFileOut);
 }
 
+// return true if it was able to get a record
 bool LogMerge::getNextRecord_string(std::string &str)
 {
     int retval;
     str.clear();
-    // if it can't get any reconrds:
-    if(m_sources.size() == 0)
+
+    // get the bucket we will be taking the next record from.
+    char bucket;
+    retval = m_index_buffer->ReadByte(bucket);
+    if(retval != 0)
         return false;
 
-    // pull the top value from the vector.
-    str.assign(m_sources[0]->get_CurrentRecord()->getLogRecord());
+    str = m_sources[bucket]->get_CurrentRecord( )->getLogRecord( );
+    m_sources[bucket]->pop( );
 
-    // pop the element to be back of the heap
-    pop_heap(m_sources.begin(), m_sources.end(), LogUnArchiver::compareGreater);
-
-    // update the last element with a new string value
-    retval = m_sources.back()->pop( );
-
-    if(retval != 0)
-    {
-        delete m_sources.back();
-        m_sources.pop_back();
-        return true;
-    }
-    else
-    {
-        // reinsert the last element into the heap, maintaining the sorted structure
-        push_heap(m_sources.begin(), m_sources.end(), LogUnArchiver::compareGreater);
-        return true;
-    }
+    return true;
 }

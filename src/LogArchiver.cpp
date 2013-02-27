@@ -17,7 +17,7 @@ LogArchiver::LogArchiver(int instance)
 
     int returnValue;
     char fileName[16];
-    snprintf(fileName, 16, "log%04d.txt.bz", m_instance);
+    snprintf(fileName, 16, "log%04d.txt.bz2", m_instance);
 
     mp_rawFileOut = fopen(fileName, "w");
     if(mp_rawFileOut == NULL)
@@ -45,7 +45,7 @@ LogArchiver::LogArchiver(char *name)
 
     int returnValue;
     char fileName[16];
-    snprintf(fileName, 16, "%s.bz", name);
+    snprintf(fileName, 16, "%s.bz2", name);
 
     mp_rawFileOut = fopen(fileName, "w");
     if(mp_rawFileOut == NULL)

@@ -43,6 +43,31 @@ int BZIP_lineBuffer::get_error( )
 }
 
 // return non zero if the operation could not be done
+int BZIP_lineBuffer::ReadByte(char& val)
+{
+
+    if(m_index < m_available)
+    {
+        val = m_inputbuffer[m_index];
+        m_index++;
+        return 0;
+    }
+
+    if(m_errorCode == BZ_STREAM_END)
+        return -1;
+
+    if( m_errorCode != BZ_OK )
+    {
+        cerr << "ERROR, unable to find the correct end of buffer in BZIP_lineBuffer" << endl;
+        return -1;
+    }
+
+    // this will refill the buffer and adjust the pointers
+    this->readData( );
+
+}
+
+// return non zero if the operation could not be done
 int BZIP_lineBuffer::ReadLine( string& str )
 {
     //int retVal = 0;
@@ -50,7 +75,7 @@ int BZIP_lineBuffer::ReadLine( string& str )
     // first, see if a newline can be found in the current buffer, without resizing
     //int length = strcspn(m_inputbuffer + m_index, "\n");
 
-    int length = sizeof(int64_t);  // skip over the first few bytes so we don't have problems bby parsing the index value
+    int length = 0;
 
     for(; length + m_index <= m_available && m_inputbuffer[m_index+length] != '\n'; length++);
 
@@ -86,10 +111,10 @@ int BZIP_lineBuffer::ReadLine( string& str )
       length = 0;
       // if the string buffer does not compleatly contain the header value
 
-      if((int) sizeof(int64_t) - (int) str.size() < 0)
+      if((int) str.size() < 0)
         length = 0;
       else
-        length = (int) sizeof(int64_t) - (int) str.size();
+        length = (int) str.size();
       for( ; length + m_index <= m_available && m_inputbuffer[m_index+length] != '\n'; length++);
 
     if(length < m_available - m_index)

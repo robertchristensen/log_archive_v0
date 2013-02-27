@@ -23,8 +23,8 @@ class LogUnArchiver
         int pop( );
         bool isAvailable( );
 
-        static bool compareLess(const LogUnArchiver* a, const LogUnArchiver* b);
-        static bool compareGreater(const LogUnArchiver* a, const LogUnArchiver* b);
+        //static bool compareLess(const LogUnArchiver* a, const LogUnArchiver* b);
+        //static bool compareGreater(const LogUnArchiver* a, const LogUnArchiver* b);
 
     protected:
     private:
