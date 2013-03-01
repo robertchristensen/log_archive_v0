@@ -24,6 +24,8 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
 
         virtual int getBucket(const std::string&);
         virtual int getBucket(const char*);
+
+        static void makeParsedSet(const std::string&, std::set<std::string>*);
     protected:
         struct ThreadArguments
         {
@@ -40,7 +42,7 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
         };
 
     private:
-        void makeParsedSet(const std::string&, std::set<std::string>*) const;
+
         static float averageJaccardInColumn(const std::list< std::set<std::string>* >* input, const std::set<std::string>* compare);
         static float bestJaccardInColumn(const std::list< std::set<std::string>* >* input, const std::set<std::string>* compare);
         static void JaccardStatsInColumn(const std::list< std::set<std::string>* >* input, const std::set<std::string>* compare, float &average, float &best);
@@ -70,8 +72,8 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
 
         static char* seperators;
         const static int history_depth_default = 10;
-        const static float default_threshold = 0.5;
-        const static float upper_threshold = 0.9;
+        constexpr static float default_threshold = 0.5;
+        constexpr static float upper_threshold = 0.9;
 };
 
 #endif // LOGDISTRIBUTERANALYZER_JACCARDSIMILARITY_H

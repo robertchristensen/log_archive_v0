@@ -64,7 +64,7 @@ LogDistributerAnalyzer_JaccardSimilarity::~LogDistributerAnalyzer_JaccardSimilar
     //for(int i=0; i<MAX_THREAD_COUNT; i++)
     //    mp_threadQueue->push(&tmp);
 
-    sleep(0);
+    //sleep(0);
 
     vector< list< set<string>* >* >::iterator it_v;
     for(it_v = mp_history->begin(); it_v != mp_history->end(); ++it_v)
@@ -181,7 +181,7 @@ void LogDistributerAnalyzer_JaccardSimilarity::JaccardStatsInColumn(const std::l
     average = count == 0 ? 0.0 : average / count;
 }
 
-void LogDistributerAnalyzer_JaccardSimilarity::makeParsedSet(const std::string& input, set<std::string>* output) const
+void LogDistributerAnalyzer_JaccardSimilarity::makeParsedSet(const std::string& input, set<std::string>* output)
 {
     output->clear();
 

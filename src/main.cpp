@@ -13,9 +13,9 @@
 using namespace std;
 
 int INPUT_BUFFER_SIZE = 200000;
-int DECOMPRESS = 1;
+int DECOMPRESS = 0;
 int BUCKETS = 8;
-LogDistributer::DistributerType DISTRIBUTER = LogDistributer::JAC_EST;
+LogDistributer::DistributerType DISTRIBUTER = LogDistributer::JACCARD_COMBINE;
 bool quite = false;
 
 
@@ -93,6 +93,11 @@ void parseInput(int argc, char**argv)
             i++;
             DISTRIBUTER = LogDistributer::JACCARD;
             //cerr << "using jaccard distance" << endl;
+        }
+        else if(strcmp("--jaccard_combine", argv[i]) == 0)
+        {
+            i++;
+            DISTRIBUTER = LogDistributer::JACCARD_COMBINE;
         }
         else if(strcmp("--char", argv[i]) == 0)
         {

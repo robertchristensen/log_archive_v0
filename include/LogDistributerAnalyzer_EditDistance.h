@@ -20,7 +20,7 @@ class LogDistributerAnalyzer_EditDistance : public LogDistributerAnalyzer
         static int getEditDistance(const char*, const char*);
         static int getEditDistance(const std::string&, const std::string&);
 
-        static const double CONSISTANCY_THRESHOLD = 0.3334;
+        static constexpr double CONSISTANCY_THRESHOLD = 0.3334;
 
         int m_buckets;
         int64_t m_stringsDistributed;
