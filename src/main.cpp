@@ -109,6 +109,11 @@ void parseInput(int argc, char**argv)
             i++;
             DISTRIBUTER = LogDistributer::JAC_EST;
         }
+        else if(strcmp("--jaccard_qgram", argv[i]) == 0)
+        {
+            i++;
+            DISTRIBUTER = LogDistributer::JACCARD_QGRAM;
+        }
         else if(strcmp("--jhistory", argv[i]) == 0)
         {
             i++;

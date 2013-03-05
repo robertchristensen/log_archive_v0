@@ -7,6 +7,7 @@
 #include "../include/LogDistributerAnalyzer_characterSimilarity.h"
 #include "../include/LogDistributerAnalyzer_JaccardEstimator.h"
 #include "../include/LogDistributerAnalyzer_JaccardSimilarityCombined.h"
+#include "../include/LogDistributerAnalyzer_JaccardSimilarity_qgramExact.h"
 
 #include <cstring>
 #include <vector>
@@ -39,6 +40,9 @@ LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
             break;
         case JACCARD_COMBINE:
             mp_analyzer = new LogDistributerAnalyzer_JaccardSimilarityCombined(num_archivers, JACCARD_HISTORY);
+            break;
+        case JACCARD_QGRAM:
+            mp_analyzer = new LogDistributerAnalyzer_JaccardSimilarity_qgramExact(num_archivers, JACCARD_HISTORY, 12);
             break;
         default:
             mp_analyzer = new LogDistributerAnalyzer_RoundRobin(num_archivers);
