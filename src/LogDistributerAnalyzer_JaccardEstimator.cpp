@@ -7,6 +7,11 @@ for centralized compression.
 However, the current goal is to verify that using the estimator we can get comparable results compared
 to calculating the Jaccard value exactly.  If it works well, this class and the kmv estimator may have to
 be compleatly rewritten.
+
+NEW:::::
+I have rewritten the kmv estimator so it would be more optimzied for this particular application.  I have
+removed copying variables significantly.  Under the direction of Fiefie, I will be using qgrams to create
+the set, which means the sets will have significntly more elements
 */
 #include <vector>
 #include <string>
@@ -14,22 +19,24 @@ be compleatly rewritten.
 #include <iostream>
 
 #include "../include/LogDistributerAnalyzer_JaccardEstimator.h"
-#include "../include/kmv.h"
+//#include "../include/kmv.h"
+#include "../include/kmv_est.h"
 
 using namespace std;
 
 char* LogDistributerAnalyzer_JaccardEstimator::seperators = " \t\n:.\\/@[]();\"\'&=-,#";
 
-LogDistributerAnalyzer_JaccardEstimator::LogDistributerAnalyzer_JaccardEstimator(int buckets, int depth, int kmvSize)
+LogDistributerAnalyzer_JaccardEstimator::LogDistributerAnalyzer_JaccardEstimator(int buckets, int depth, int kmvSize, int qgramSize)
 : m_bucketCount(buckets),
   m_slidingWindowSize(depth),
   m_kmvSize(kmvSize),
+  m_qgramsize(qgramSize),
   m_bucketsInUse(0),
   m_threshold(0.5)
 {
-    mp_history = new vector< vector<kmv*>* >(m_bucketCount);
+    mp_history = new vector< vector<kmv_est*>* >(m_bucketCount);
     for(int i=0; i < m_bucketCount; i++)
-        mp_history->at(i) = new vector<kmv*>();
+        mp_history->at(i) = new vector<kmv_est*>();
     mp_historyIndex = new int[m_bucketCount];
     for(int i=0; i < m_bucketCount; i++)
         mp_historyIndex[0] = 0;
@@ -53,6 +60,11 @@ LogDistributerAnalyzer_JaccardEstimator::~LogDistributerAnalyzer_JaccardEstimato
 
 int LogDistributerAnalyzer_JaccardEstimator::getBucket(const std::string& str)
 {
+    return getBucket(str.c_str());
+}
+
+int LogDistributerAnalyzer_JaccardEstimator::getBucket(const char* str)
+{
     int bestBucket = -1;
     float threshold = m_threshold;
 
@@ -60,8 +72,7 @@ int LogDistributerAnalyzer_JaccardEstimator::getBucket(const std::string& str)
         threshold = 0;
 
     // make new kmv estimator
-    kmv* newKMV = new kmv(m_kmvSize);
-    makeKMVfromString(str, *newKMV);
+    kmv_est* newKMV = new kmv_est(str, m_kmvSize, m_qgramsize);
 
     // search the main list to find the best location to place the new log entry
     float average;
@@ -103,42 +114,8 @@ int LogDistributerAnalyzer_JaccardEstimator::getBucket(const std::string& str)
     return bestBucket;
 }
 
-int LogDistributerAnalyzer_JaccardEstimator::getBucket(const char* str)
-{
-    string val(str);
-    int value = getBucket(val);
-    return value;
-}
-
-void LogDistributerAnalyzer_JaccardEstimator::makeKMVfromString(const std::string str, kmv& val)
-{
-    vector<string> set;
-
-    unsigned startidx = 0;
-    unsigned endidx = 0;
-
-    startidx = 0;
-    endidx   = str.find_first_of(seperators, startidx);
-
-    while(endidx < str.size())
-    {
-        // no use inserting a string with zero length
-        if(endidx >= startidx + 1)
-        {
-            set.push_back(str.substr(startidx, endidx - startidx));
-        }
-
-        // find the next indext to use
-        startidx = endidx+1;
-        endidx = str.find_first_of(seperators, startidx+1);
-    }
-
-    // the set has been created, now generate the kmv estimator
-    val.buildkmv(set);
-}
-
-void LogDistributerAnalyzer_JaccardEstimator::StatsInColumn(const std::vector<kmv*>* input,
-                   kmv* compare,
+void LogDistributerAnalyzer_JaccardEstimator::StatsInColumn(const std::vector<kmv_est*>* input,
+                   kmv_est* compare,
                    float &average,
                    float &best)
 {
@@ -147,18 +124,12 @@ void LogDistributerAnalyzer_JaccardEstimator::StatsInColumn(const std::vector<km
     best      = 0.0;
 
     // this is what we do so we can compare individual elements in the column
-    vector<kmv*> compareGroup(2);
-    compareGroup[0] = compare;
-
-    vector< kmv* >::const_iterator it = input->begin();
-    for(; it != input->end(); it++)
+    vector<kmv_est*>::const_iterator it = input->begin();
+    for( ; it < input->end(); it++, count++)
     {
-        compareGroup[1] = *it;
-        float tmp = kmv::DVJaccardEst(compareGroup);
+        float tmp = compare->jaccard_est(*it);
         average += tmp;
-        best = max(best, (float)tmp);
-
-        count++;
+        best = max(best, tmp);
     }
 
     average = count == 0 ? 0.0 : average / count;

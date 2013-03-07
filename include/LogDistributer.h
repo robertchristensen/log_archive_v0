@@ -20,6 +20,8 @@ public:
     int close();
 
     static int JACCARD_HISTORY;
+    static int Q_GRAM_LENGTH;
+    static int KMV_MAX_K;
 protected:
 private:
     std::vector<LogArchiver*> *mp_archivers;

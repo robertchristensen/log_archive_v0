@@ -15,8 +15,6 @@
 
 using namespace std;
 
-char* LogDistributerAnalyzer_JaccardSimilarity_qgramExact::seperators = " \t\n:.\\/@[]();\"\'&=-,#";
-
 LogDistributerAnalyzer_JaccardSimilarity_qgramExact::LogDistributerAnalyzer_JaccardSimilarity_qgramExact(int buckets, int depth, int qgramLength)
 :  m_stringsDistributed(0)
 ,  m_bucketcount(buckets)

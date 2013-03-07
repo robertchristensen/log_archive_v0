@@ -15,6 +15,8 @@
 using namespace std;
 
 int LogDistributer::JACCARD_HISTORY = 5;
+int LogDistributer::Q_GRAM_LENGTH   = 6;
+int LogDistributer::KMV_MAX_K       = 60;
 
 LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
 : //m_numberOfArchivers(num_archivers),
@@ -36,13 +38,13 @@ LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
             mp_analyzer = new LogDistributerAnalyzer_characterSimilarity(num_archivers, JACCARD_HISTORY);
             break;
         case JAC_EST:
-            mp_analyzer = new LogDistributerAnalyzer_JaccardEstimator(num_archivers, JACCARD_HISTORY, 10);
+            mp_analyzer = new LogDistributerAnalyzer_JaccardEstimator(num_archivers, JACCARD_HISTORY, KMV_MAX_K, Q_GRAM_LENGTH);
             break;
         case JACCARD_COMBINE:
             mp_analyzer = new LogDistributerAnalyzer_JaccardSimilarityCombined(num_archivers, JACCARD_HISTORY);
             break;
         case JACCARD_QGRAM:
-            mp_analyzer = new LogDistributerAnalyzer_JaccardSimilarity_qgramExact(num_archivers, JACCARD_HISTORY, 12);
+            mp_analyzer = new LogDistributerAnalyzer_JaccardSimilarity_qgramExact(num_archivers, JACCARD_HISTORY, 6);
             break;
         default:
             mp_analyzer = new LogDistributerAnalyzer_RoundRobin(num_archivers);

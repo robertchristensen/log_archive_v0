@@ -15,7 +15,7 @@ using namespace std;
 int INPUT_BUFFER_SIZE = 200000;
 int DECOMPRESS = 0;
 int BUCKETS = 8;
-LogDistributer::DistributerType DISTRIBUTER = LogDistributer::JACCARD_COMBINE;
+LogDistributer::DistributerType DISTRIBUTER = LogDistributer::JAC_EST;
 bool quite = false;
 
 
@@ -134,6 +134,28 @@ void parseInput(int argc, char**argv)
                 BUCKETS = x;
             else
                 cerr << "ERROR: problem parsing the number of buckets requested" << endl;
+            i++;
+        }
+        else if(strcmp("--qgram_size", argv[i]) == 0)
+        {
+            i++;
+            char *end;
+            int x = strtol(argv[i], &end, 10);
+            if(x > 0 && x < 100)
+                LogDistributer::Q_GRAM_LENGTH = x;
+            else
+                cerr << "ERROR: unable to parse the qgram length correctly" << endl;
+            i++;
+        }
+        else if(strcmp("--max_k", argv[i]) == 0)
+        {
+            i++;
+            char *end;
+            int x = strtol(argv[i], &end, 10);
+            if(x > 0 && x < 1000)
+                LogDistributer::KMV_MAX_K = x;
+            else
+                cerr << "ERROR: unable to parse the value of max k correctly" << endl;
             i++;
         }
     }

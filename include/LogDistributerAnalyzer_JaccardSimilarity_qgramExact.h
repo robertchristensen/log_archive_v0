@@ -44,9 +44,7 @@ class LogDistributerAnalyzer_JaccardSimilarity_qgramExact : public LogDistribute
         int m_qgramLength;
 
         std::vector< std::list< std::set<std::string>* >* >* mp_history;
-        //std::vector<int64_t> *mp_last_time_used; // tracks the last time a particular bucket was used.
 
-        static char* seperators;
         const static int history_depth_default = 10;
         constexpr static float default_threshold = 0.5;
         constexpr static float upper_threshold = 0.9;
