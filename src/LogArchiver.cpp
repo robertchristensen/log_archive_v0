@@ -1,8 +1,11 @@
 #include "../include/LogArchiver.h"
+#include "../include/ThreadSafeQueue.h"
+#include "../include/LogRecord.h"
 #include <bzlib.h>
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <thread>
 
 using namespace std;
 
@@ -35,6 +38,9 @@ LogArchiver::LogArchiver(int instance)
         closed = true;
         return;
     }
+
+    mp_insertQueue = new ThreadSafeQueue(DEFAULT_QUEUE_SIZE);
+    mp_thisWorker = new thread(ThreadStart, this);
 }
 
 LogArchiver::LogArchiver(char *name)
@@ -63,19 +69,57 @@ LogArchiver::LogArchiver(char *name)
         closed = true;
         return;
     }
+
+    mp_insertQueue = new ThreadSafeQueue(DEFAULT_QUEUE_SIZE);
+    mp_thisWorker = new thread(ThreadStart, this);
 }
 
 LogArchiver::~LogArchiver()
 {
     if(closed != true)
         this->close();
+
+     delete mp_insertQueue;
+     delete mp_thisWorker;
 }
+
+void LogArchiver::ThreadStart(LogArchiver* i)
+{
+    i->ThreadLoop();
+    return;
+}
+
+
+void LogArchiver::ThreadLoop()
+{
+    void* from_queue;
+    int returnValue;
+    LogRecord* data;
+    while((from_queue = this->mp_insertQueue->pop_front( )) != NULL)
+    {
+        // get the record to insert into the archive
+        data = (LogRecord*)from_queue;
+        // insert the record into the archive.  NOTE: for backwards
+        // compatibility I don't do locking!
+        BZ2_bzWrite(&returnValue, mp_bzip2File, data->m_str, data->m_str_size);
+
+        // clean up the memory used by the data.  The data is deleted.
+        delete data;
+        data = NULL;
+    }
+}
+
 
 int LogArchiver::close()
 {
     int returnValue;
     if(closed == true)
         return 0;
+
+    // tell the thread to end (by writing null to the thread buffer)
+    mp_insertQueue->push( NULL );
+    // wait for the thread to die
+    mp_thisWorker->join();
 
     BZ2_bzWriteClose( &returnValue, mp_bzip2File, 0, NULL, NULL );
 
@@ -119,4 +163,22 @@ int LogArchiver::setBlockSize(int value)
 int LogArchiver::getBlockSize()
 {
     return blockSize;
+}
+
+void LogArchiver::BackgroundInsertRecord(char *str, int size)
+{
+    if(!closed)
+        mp_insertQueue->push(new LogRecord(str, size));
+}
+
+void LogArchiver::BackgroundInsertRecord(std::string *str)
+{
+    if(!closed)
+        mp_insertQueue->push(new LogRecord(str->c_str(), str->size()));
+}
+
+void LogArchiver::BackgroundInsertRecord(LogRecord *data)
+{
+    if(!closed)
+        mp_insertQueue->push(data);
 }

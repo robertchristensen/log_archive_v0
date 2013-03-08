@@ -75,7 +75,7 @@ bool LogMerge::getNextRecord_string(std::string &str)
     if(retval != 0)
         return false;
 
-    str = m_sources[bucket]->get_CurrentRecord( )->getLogRecord( );
+    //str = m_sources[bucket]->get_CurrentRecord( )->getLogRecord( );
     m_sources[bucket]->pop( );
 
     return true;

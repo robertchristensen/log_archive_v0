@@ -140,7 +140,6 @@ void LogDistributerAnalyzer_JaccardSimilarityCombined::JaccardStatsInColumn(cons
                                                                     float &average,
                                                                     float &best)
 {
-    int count = 0;
     average = 0.0;
     best    = 0.0;
 

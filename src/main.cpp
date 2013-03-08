@@ -192,7 +192,8 @@ int main(int argc, char **argv)
             inputBuffer[++size] = '\0';
 
             ++totalLines;
-            logger->insert(inputBuffer, size);
+            //logger->insert(inputBuffer, size);
+            logger->Background_insert(inputBuffer, size);
             if(!quite && totalLines % 137 == 0)
                 cerr << '\r' << totalLines;// << '\r';
         }while(!cin.eof());

@@ -4,31 +4,20 @@
 #include <string>
 #include <inttypes.h>
 
-class LogRecord
+/*
+A LogRecord is given responsibility
+*/
+struct LogRecord
 {
     public:
-        LogRecord( );
-        LogRecord(const char* str);
-        LogRecord(const std::string* str);
-        virtual ~LogRecord();
+        LogRecord(const char* str, int size);
 
-        int ChangeRecord(const char* str);
-        int ChangeRecord(const std::string& str);
+        ~LogRecord();
 
-
-        //int64_t getIndexNumber() const;
-
-        //std::string getLogRecordString();
-
-        const char* getLogRecord() const;
-        int getLogRecordSize() const;
-
-        static bool compareLess(const LogRecord &, const LogRecord &);
-        static bool compareGreater(const LogRecord &, const LogRecord &);
-    protected:
+        char* m_str;
+        int m_str_size;
     private:
-        //int64_t m_indexValue;
-        std::string m_str;
+        //char* m_back_str;
 };
 
 #endif // LOGRECORD_H

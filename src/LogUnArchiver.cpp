@@ -38,7 +38,7 @@ LogUnArchiver::LogUnArchiver(int instance)
     }
 
     mp_lineBuffer = new BZIP_lineBuffer(mp_bzip2File);
-    mp_currentRecord = new LogRecord( );
+    //mp_currentRecord = new LogRecord( );
 
     // at the end we call pop so the current record is actaully referencing something
     this->pop( );
@@ -83,8 +83,17 @@ int LogUnArchiver::pop( )
     string tmp;
     int retval = mp_lineBuffer->ReadLine(tmp);
 
+    if(mp_currentRecord)
+    {
+        delete mp_currentRecord;
+        mp_currentRecord = 0;
+    }
+
     if(retval == 0)
-        mp_currentRecord->ChangeRecord(tmp);
+    {
+        mp_currentRecord = new LogRecord(tmp.c_str(), tmp.size());
+        //mp_currentRecord->ChangeRecord(tmp);
+    }
     else
         m_available = false;
 

@@ -11,6 +11,7 @@
 
 #include <cstring>
 #include <vector>
+#include <thread>
 
 using namespace std;
 
@@ -19,7 +20,7 @@ int LogDistributer::Q_GRAM_LENGTH   = 6;
 int LogDistributer::KMV_MAX_K       = 60;
 
 LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
-: //m_numberOfArchivers(num_archivers),
+: m_thisDistributerType(distrib),
   m_index(0),
   m_closed(0)
 {
@@ -51,6 +52,9 @@ LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
     }
     mp_archivers = new vector<LogArchiver*>( );
     mp_index = new LogArchiver("index");
+
+    mp_rawQueue = new ThreadSafeQueue(DEFAULT_INSERT_QUEUE_SIZE);
+    mp_stepOneThread = new thread(StartThread_step1, this);
 }
 
 LogDistributer::~LogDistributer()
@@ -65,12 +69,17 @@ LogDistributer::~LogDistributer()
     delete mp_archivers;
     delete mp_analyzer;
     delete mp_index;
+    delete mp_rawQueue;
+    delete mp_stepOneThread;
 }
 
 int LogDistributer::close()
 {
     if(m_closed == true)
         return 0;
+
+    mp_rawQueue->push( NULL );
+    mp_stepOneThread->join();
 
     m_closed = true;
     vector<LogArchiver*>::iterator it = mp_archivers->begin();
@@ -80,13 +89,36 @@ int LogDistributer::close()
     return 0;
 }
 
+void LogDistributer::StartThread_step1( LogDistributer* i )
+{
+    i->ThreadLoop_step1( );
+    return;
+}
+
+void LogDistributer::ThreadLoop_step1( )
+{
+    void* from_queue;
+    int bucket;
+    char cbucket;
+    LogRecord* data;
+    while((from_queue = this->mp_rawQueue->pop_front( )) != NULL)
+    {
+        data = (LogRecord*) from_queue;
+        bucket = mp_analyzer->getBucket(data->m_str);
+        cbucket = (unsigned char) bucket;
+
+        if(bucket == mp_archivers->size())
+            mp_archivers->push_back(new LogArchiver(bucket));
+
+        mp_archivers->at(bucket)->BackgroundInsertRecord(data);
+
+        mp_index->BackgroundInsertRecord( &cbucket, 1 );
+    }
+    return;
+}
+
 int LogDistributer::insert(char *str, int size)
 {
-    //const int index_size = 5;
-
-    // TODO: it would increase the speed of the algorithm to not dynamically allocate memmory
-    //char *tmp_str = new char[index_size + size];
-
     // find string similarity before repacking
     int bucket = mp_analyzer->getBucket(str);
     char b = (char) bucket;
@@ -97,20 +129,17 @@ int LogDistributer::insert(char *str, int size)
         mp_archivers->push_back(new LogArchiver(bucket));
     }
 
-    // using string values to record the record number:
-    // we start by forcing the number of digits to be 8
-
-
-    // insert index at the begining of the array, then place the string at the end
-    //snprintf(tmp_str, index_size+1, "%05d", m_index++);
-    //memcpy(tmp_str + index_size, str, size);
-
-    //int retVal = mp_archivers->at(bucket)->InsertRecord(tmp_str, size + index_size);
+    // insert the record into the appropreate bucket
     int retVal = mp_archivers->at(bucket)->InsertRecord(str, size);
 
+    // insert the new record into the index file
     mp_index->InsertRecord( &b, 1 );
-
-    //delete []tmp_str;
+    //mp_index->BackgroundInsertRecord( &b, 1 );
 
     return retVal;
+}
+
+int LogDistributer::Background_insert(char *str, int size)
+{
+    mp_rawQueue->push( new LogRecord(str, size));
 }

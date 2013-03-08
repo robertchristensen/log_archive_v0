@@ -1,48 +1,28 @@
 #include "../include/LogRecord.h"
 
 #include <string>
+#include <cstring>
 
 using namespace std;
 
-LogRecord::LogRecord(const char* str)
+LogRecord::LogRecord(const char* str, int size)
+: m_str_size(size)
 {
-    this->ChangeRecord(str);
-}
+    // allocate enough memory so the string can be copied to the buffer
+    // (include enough space for an extra null character in case the original
+    //  string is not null terminated)
+    m_str = new char[size+1];
+    //m_str = m_back_str;
 
-LogRecord::LogRecord(const string* str)
-{
-    this->ChangeRecord(*str);
-}
-
-LogRecord::LogRecord( )
-{
-    // nothing to do
+    // copy the string and make sure it is null terminated by adding a null
+    // character at the end of the string.  a null character should appear
+    // before this.  In other words, the common case will be to have two
+    // null characters at the end of the string
+    strncpy(m_str, str, size);
+    m_str[size] = '\0';
 }
 
 LogRecord::~LogRecord()
 {
-}
-
-int LogRecord::ChangeRecord(const char* str)
-{
-    m_str.assign(str);
-
-    return m_str.size();
-}
-
-int LogRecord::ChangeRecord(const string& str)
-{
-    m_str.assign(str, 0, string::npos);
-
-    return m_str.size();
-}
-
-const char* LogRecord::getLogRecord() const
-{
-    return m_str.c_str();
-}
-
-int LogRecord::getLogRecordSize() const
-{
-    return m_str.size();
+    delete []m_str;
 }
