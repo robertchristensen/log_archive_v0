@@ -1,0 +1,349 @@
+# depslib dependency file v1.0
+1359154005 source:/home/robertc/Research/log_data/Archiver/src/Archiver_Group.cpp
+	"../include/Archiver_Group.h"
+
+1359156355 /home/robertc/Research/log_data/Archiver/include/Archiver_Group.h
+
+1366675107 source:/home/robertc/Research/log_data/Archiver/src/main.cpp
+	<iostream>
+	<cstdlib>
+	<stdio.h>
+	<string>
+	<cstring>
+	<execinfo.h>
+	<signal.h>
+	<bzlib.h>
+	"../include/LogDistributer.h"
+	"../include/LogUnArchiver.h"
+	"../include/LogMerge.h"
+
+1362782458 source:/home/robertc/Research/log_data/Archiver/src/LogArchiver.cpp
+	"../include/LogArchiver.h"
+	"../include/ThreadSafeQueue.h"
+	"../include/LogRecord.h"
+	<bzlib.h>
+	<cstdlib>
+	<string>
+	<iostream>
+	<thread>
+
+1367858370 /home/robertc/Research/log_data/Archiver/include/LogArchiver.h
+	<bzlib.h>
+	<cstdlib>
+	<string>
+	<thread>
+	<mutex>
+	"../include/ThreadSafeQueue.h"
+	"../include/LogRecord.h"
+
+1366840130 source:/home/robertc/Research/log_data/Archiver/src/LogDistributer.cpp
+	"../include/LogDistributer.h"
+	"../include/LogArchiver.h"
+	"../include/LogDistributerAnalyzer.h"
+	"../include/LogDistributerAnalyzer_RoundRobin.h"
+	"../include/LogDistributerAnalyzer_EditDistance.h"
+	"../include/LogDistributerAnalyzer_JaccardSimilarity.h"
+	"../include/LogDistributerAnalyzer_characterSimilarity.h"
+	"../include/LogDistributerAnalyzer_JaccardEstimator.h"
+	"../include/LogDistributerAnalyzer_JaccardSimilarityCombined.h"
+	"../include/LogDistributerAnalyzer_JaccardSimilarity_qgramExact.h"
+	<cstring>
+	<vector>
+	<thread>
+	<iostream>
+
+1363030455 /home/robertc/Research/log_data/Archiver/include/LogDistributer.h
+	<inttypes.h>
+	<vector>
+	<thread>
+	"../include/LogArchiver.h"
+	"../include/LogDistributerAnalyzer.h"
+	"../include/ThreadSafeQueue.h"
+
+1363030292 source:/home/robertc/Research/log_data/Archiver/src/LogRecord.cpp
+	"../include/LogRecord.h"
+	<string>
+	<cstring>
+
+1363030271 /home/robertc/Research/log_data/Archiver/include/LogRecord.h
+	<string>
+	<inttypes.h>
+
+1362776682 source:/home/robertc/Research/log_data/Archiver/src/LogUnArchiver.cpp
+	"../include/LogUnArchiver.h"
+	<iostream>
+
+1362776256 /home/robertc/Research/log_data/Archiver/include/LogUnArchiver.h
+	<cstdlib>
+	<iostream>
+	<bzlib.h>
+	"../include/BZIP_lineBuffer.h"
+	"../include/LogRecord.h"
+
+1361921170 source:/home/robertc/Research/log_data/Archiver/src/BZIP_lineBuffer.cpp
+	"../include/BZIP_lineBuffer.h"
+	<cstring>
+	<string>
+	<iostream>
+	<inttypes.h>
+	<bzlib.h>
+
+1361918508 /home/robertc/Research/log_data/Archiver/include/BZIP_lineBuffer.h
+	<string>
+	<bzlib.h>
+
+1362696676 source:/home/robertc/Research/log_data/Archiver/src/LogMerge.cpp
+	"../include/LogMerge.h"
+	<iostream>
+	<string>
+	<algorithm>
+
+1361921079 /home/robertc/Research/log_data/Archiver/include/LogMerge.h
+	<iostream>
+	<vector>
+	<string>
+	"../include/LogUnArchiver.h"
+	"../include/BZIP_lineBuffer.h"
+
+1359671121 source:/home/robertc/Research/log_data/Archiver/src/LogDistributerAnalyzer_RoundRobin.cpp
+	"../include/LogDistributerAnalyzer_RoundRobin.h"
+
+1366223744 /home/robertc/Research/log_data/Archiver/include/LogDistributerAnalyzer_RoundRobin.h
+	"../include/LogDistributerAnalyzer.h"
+
+1366223590 /home/robertc/Research/log_data/Archiver/include/LogDistributerAnalyzer.h
+	<string>
+	"../include/LogRecord.h"
+
+1363020096 source:/home/robertc/Research/log_data/Archiver/src/LogDistributerAnalyzer_EditDistance.cpp
+	"../include/LogDistributerAnalyzer_EditDistance.h"
+	<vector>
+	<string>
+	<algorithm>
+	<cstring>
+	<climits>
+	<cmath>
+	<limits>
+	<inttypes.h>
+
+1366223690 /home/robertc/Research/log_data/Archiver/include/LogDistributerAnalyzer_EditDistance.h
+	<vector>
+	<string>
+	<inttypes.h>
+	"../include/LogDistributerAnalyzer.h"
+
+1360186193 source:/home/robertc/Research/log_data/Archiver/src/SetTools.cpp
+	"../include/SetTools.h"
+	<set>
+	<string>
+
+1359670814 /home/robertc/Research/log_data/Archiver/include/SetTools.h
+	<set>
+	<string>
+
+1362008978 source:/home/robertc/Research/log_data/Archiver/src/LogDistributerAnalyzer_JaccardSimilarity.cpp
+	"../include/LogDistributerAnalyzer_JaccardSimilarity.h"
+	"../include/SetTools.h"
+	<vector>
+	<string>
+	<algorithm>
+	<cstring>
+	<cmath>
+	<set>
+	<list>
+	<inttypes.h>
+	<limits.h>
+	<climits>
+	<iostream>
+	<cstdio>
+
+1366223710 /home/robertc/Research/log_data/Archiver/include/LogDistributerAnalyzer_JaccardSimilarity.h
+	"../include/LogDistributerAnalyzer.h"
+	"../include/ThreadSafeQueue.h"
+	<set>
+	<vector>
+	<list>
+	<string>
+	<inttypes.h>
+	<pthread.h>
+	<semaphore.h>
+
+1360194062 source:/home/robertc/Research/log_data/Archiver/src/LogDistributerAnalyzer_JaccardDynamic.cpp
+	"../include/LogDistributerAnalyzer_JaccardDynamic.h"
+	"../include/SetTools.h"
+	<vector>
+	<string>
+	<algorithm>
+	<cstring>
+	<cmath>
+	<set>
+	<list>
+	<inttypes.h>
+	<limits.h>
+	<climits>
+	<iostream>
+	<cstdio>
+
+1360194016 /home/robertc/Research/log_data/Archiver/include/LogDistributerAnalyzer_JaccardDynamic.h
+	<vector>
+	<string>
+	<list>
+	<set>
+	"../include/LogDistributerAnalyzer.h"
+
+1362776553 /home/robertc/Research/log_data/Archiver/include/ThreadSafeQueue.h
+	<pthread.h>
+	<deque>
+	<semaphore.h>
+
+1362776553 source:/home/robertc/Research/log_data/Archiver/src/ThreadSafeQueue.cpp
+	"../include/ThreadSafeQueue.h"
+	<pthread.h>
+	<deque>
+
+1361906647 source:/home/robertc/Research/log_data/Archiver/src/LogDistributerAnalyzer_characterSimilarity.cpp
+	"../include/LogDistributerAnalyzer_characterSimilarity.h"
+	"../include/characterCount.h"
+	<vector>
+	<list>
+	<limits>
+
+1366223735 /home/robertc/Research/log_data/Archiver/include/LogDistributerAnalyzer_characterSimilarity.h
+	<vector>
+	<list>
+	"../include/LogDistributerAnalyzer.h"
+	"../include/characterCount.h"
+
+1361478608 source:/home/robertc/Research/log_data/Archiver/src/characterCount.cpp
+	<cstring>
+	"../include/characterCount.h"
+
+1361478531 /home/robertc/Research/log_data/Archiver/include/characterCount.h
+	<string>
+
+1361828709 source:/home/robertc/Research/log_data/Archiver/src/Rijndael.cpp
+	<cstring>
+	<exception>
+	"../include/Rijndael.h"
+
+1361828288 /home/robertc/Research/log_data/Archiver/include/Rijndael.h
+	<exception>
+	<cstring>
+
+1361828719 source:/home/robertc/Research/log_data/Archiver/src/sha1.cpp
+	"../include/sha1.h"
+
+1361828316 /home/robertc/Research/log_data/Archiver/include/sha1.h
+
+1361911580 source:/home/robertc/Research/log_data/Archiver/src/kmv.cpp
+	"../include/kmv.h"
+
+1361911386 /home/robertc/Research/log_data/Archiver/include/kmv.h
+	<stdio.h>
+	<stdlib.h>
+	"Rijndael.h"
+	<iostream>
+	<vector>
+	<map>
+	<time.h>
+	<algorithm>
+	<sstream>
+	<iomanip>
+	<string.h>
+	"kmvtool.h"
+	"sha1.h"
+
+1361827848 /home/robertc/Research/log_data/Archiver/include/kmvtool.h
+	<stdio.h>
+	<stdlib.h>
+	"Rijndael.h"
+	<iostream>
+	<vector>
+	<map>
+	<time.h>
+	<algorithm>
+	<sstream>
+	<iomanip>
+	<string.h>
+
+1366841514 source:/home/robertc/Research/log_data/Archiver/src/LogDistributerAnalyzer_JaccardEstimator.cpp
+	<vector>
+	<string>
+	<limits>
+	<iostream>
+	<thread>
+	<future>
+	"../include/LogDistributerAnalyzer_JaccardEstimator.h"
+	"../include/kmv_est.h"
+
+1366308234 /home/robertc/Research/log_data/Archiver/include/LogDistributerAnalyzer_JaccardEstimator.h
+	<vector>
+	<string>
+	<thread>
+	"../include/LogDistributerAnalyzer.h"
+	"../include/kmv_est.h"
+	"../include/ThreadSafeQueue.h"
+
+1361828820 source:/home/robertc/Research/log_data/Archiver/src/kmvtool.cpp
+	"../include/kmvtool.h"
+
+1362776726 source:/home/robertc/Research/log_data/Archiver/src/LogDistributerAnalyzer_JaccardSimilarityCombined.cpp
+	<vector>
+	<iostream>
+	<set>
+	<string>
+	"../include/LogDistributerAnalyzer_JaccardSimilarityCombined.h"
+	"../include/LogDistributerAnalyzer_JaccardSimilarity.h"
+	"../include/SetTools.h"
+
+1366223761 /home/robertc/Research/log_data/Archiver/include/LogDistributerAnalyzer_JaccardSimilarityCombined.h
+	<vector>
+	<string>
+	<list>
+	<set>
+	"../include/LogDistributerAnalyzer.h"
+
+1362506711 source:/home/robertc/Research/log_data/Archiver/src/LogDistributerAnalyzer_JaccardSimilarity_qgramExact.cpp
+	"../include/LogDistributerAnalyzer_JaccardSimilarity_qgramExact.h"
+	"../include/SetTools.h"
+	<vector>
+	<string>
+	<algorithm>
+	<cstring>
+	<cmath>
+	<set>
+	<list>
+	<inttypes.h>
+	<limits.h>
+	<climits>
+	<iostream>
+	<cstdio>
+
+1366223752 /home/robertc/Research/log_data/Archiver/include/LogDistributerAnalyzer_JaccardSimilarity_qgramExact.h
+	"../include/LogDistributerAnalyzer.h"
+	<set>
+	<vector>
+	<list>
+	<string>
+	<inttypes.h>
+
+1366835713 source:/home/robertc/Research/log_data/Archiver/src/kmv_est.cpp
+	"../include/kmv_est.h"
+	<vector>
+	<string>
+	<unordered_set>
+	<algorithm>
+	<cstring>
+	<limits>
+	<openssl/md4.h>
+	<openssl/md5.h>
+	<openssl/sha.h>
+
+1363024050 /home/robertc/Research/log_data/Archiver/include/kmv_est.h
+	<string>
+	<vector>
+	<inttypes.h>
+	<openssl/md4.h>
+	<openssl/md5.h>
+	<openssl/sha.h>
+

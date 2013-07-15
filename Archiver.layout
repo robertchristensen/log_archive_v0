@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Release" />
+	<File name="include/BZIP_lineBuffer.h" open="0" top="0" tabpos="2">
+		<Cursor position="291" topLine="0" />
+	</File>
+	<File name="include/LogArchiver.h" open="1" top="0" tabpos="4">
+		<Cursor position="1324" topLine="21" />
+	</File>
+	<File name="include/LogDistributer.h" open="0" top="0" tabpos="6">
+		<Cursor position="1017" topLine="12" />
+	</File>
+	<File name="include/LogDistributerAnalyzer.h" open="1" top="0" tabpos="2">
+		<Cursor position="1137" topLine="0" />
+	</File>
+	<File name="include/LogDistributerAnalyzer_EditDistance.h" open="0" top="0" tabpos="12">
+		<Cursor position="584" topLine="0" />
+	</File>
+	<File name="include/LogDistributerAnalyzer_JaccardEstimator.h" open="1" top="0" tabpos="1">
+		<Cursor position="955" topLine="10" />
+	</File>
+	<File name="include/LogDistributerAnalyzer_JaccardSimilarity.h" open="0" top="0" tabpos="2">
+		<Cursor position="772" topLine="9" />
+	</File>
+	<File name="include/LogDistributerAnalyzer_JaccardSimilarityCombined.h" open="0" top="0" tabpos="0">
+		<Cursor position="667" topLine="0" />
+	</File>
+	<File name="include/LogDistributerAnalyzer_JaccardSimilarity_qgramExact.h" open="0" top="0" tabpos="6">
+		<Cursor position="728" topLine="2" />
+	</File>
+	<File name="include/LogDistributerAnalyzer_RoundRobin.h" open="0" top="0" tabpos="11">
+		<Cursor position="572" topLine="0" />
+	</File>
+	<File name="include/LogDistributerAnalyzer_characterSimilarity.h" open="0" top="0" tabpos="0">
+		<Cursor position="650" topLine="0" />
+	</File>
+	<File name="include/LogMerge.h" open="0" top="0" tabpos="3">
+		<Cursor position="471" topLine="0" />
+	</File>
+	<File name="include/LogRecord.h" open="0" top="0" tabpos="9">
+		<Cursor position="249" topLine="0" />
+	</File>
+	<File name="include/LogUnArchiver.h" open="0" top="0" tabpos="5">
+		<Cursor position="801" topLine="8" />
+	</File>
+	<File name="include/Rijndael.h" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="94" />
+	</File>
+	<File name="include/SetTools.h" open="0" top="0" tabpos="0">
+		<Cursor position="128" topLine="0" />
+	</File>
+	<File name="include/ThreadSafeQueue.h" open="0" top="0" tabpos="7">
+		<Cursor position="696" topLine="0" />
+	</File>
+	<File name="include/kmv.h" open="0" top="0" tabpos="4">
+		<Cursor position="318" topLine="18" />
+	</File>
+	<File name="include/kmv_est.h" open="0" top="0" tabpos="4">
+		<Cursor position="1464" topLine="21" />
+	</File>
+	<File name="src/Archiver_Group.cpp" open="0" top="0" tabpos="14">
+		<Cursor position="21" topLine="0" />
+	</File>
+	<File name="src/BZIP_lineBuffer.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="1522" topLine="54" />
+	</File>
+	<File name="src/LogArchiver.cpp" open="0" top="0" tabpos="7">
+		<Cursor position="1849" topLine="78" />
+	</File>
+	<File name="src/LogDistributer.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="2685" topLine="61" />
+	</File>
+	<File name="src/LogDistributerAnalyzer_EditDistance.cpp" open="0" top="0" tabpos="10">
+		<Cursor position="3193" topLine="29" />
+	</File>
+	<File name="src/LogDistributerAnalyzer_JaccardEstimator.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="5885" topLine="160" />
+	</File>
+	<File name="src/LogDistributerAnalyzer_JaccardSimilarity.cpp" open="0" top="0" tabpos="11">
+		<Cursor position="284" topLine="84" />
+	</File>
+	<File name="src/LogDistributerAnalyzer_JaccardSimilarityCombined.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="4302" topLine="115" />
+	</File>
+	<File name="src/LogDistributerAnalyzer_JaccardSimilarity_qgramExact.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="785" topLine="7" />
+	</File>
+	<File name="src/LogDistributerAnalyzer_RoundRobin.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="418" topLine="0" />
+	</File>
+	<File name="src/LogDistributerAnalyzer_characterSimilarity.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="2189" topLine="58" />
+	</File>
+	<File name="src/LogMerge.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="1720" topLine="43" />
+	</File>
+	<File name="src/LogRecord.cpp" open="0" top="0" tabpos="8">
+		<Cursor position="781" topLine="0" />
+	</File>
+	<File name="src/LogUnArchiver.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="1973" topLine="63" />
+	</File>
+	<File name="src/Rijndael.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="83" topLine="0" />
+	</File>
+	<File name="src/SetTools.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="1057" topLine="0" />
+	</File>
+	<File name="src/ThreadSafeQueue.cpp" open="0" top="0" tabpos="10">
+		<Cursor position="39" topLine="15" />
+	</File>
+	<File name="src/characterCount.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="735" topLine="20" />
+	</File>
+	<File name="src/kmv.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="713" topLine="21" />
+	</File>
+	<File name="src/kmv_est.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="2101" topLine="143" />
+	</File>
+	<File name="src/kmvtool.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="21" topLine="0" />
+	</File>
+	<File name="src/main.cpp" open="1" top="1" tabpos="6">
+		<Cursor position="8977" topLine="25" />
+	</File>
+	<File name="src/sha1.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1645" topLine="21" />
+	</File>
+</CodeBlocks_layout_file>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Archiver" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Archiver" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c++0x" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="libbz2" />
+					<Add library="pthread" />
+					<Add library="ssl" />
+					<Add library="crypto" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Archiver" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-march=core2" />
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="libbz2" />
+					<Add library="pthread" />
+					<Add library="ssl" />
+					<Add library="crypto" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="include/Archiver_Group.h" />
+		<Unit filename="include/BZIP_lineBuffer.h" />
+		<Unit filename="include/LogArchiver.h" />
+		<Unit filename="include/LogDistributer.h" />
+		<Unit filename="include/LogDistributerAnalyzer.h" />
+		<Unit filename="include/LogDistributerAnalyzer_EditDistance.h" />
+		<Unit filename="include/LogDistributerAnalyzer_JaccardEstimator.h" />
+		<Unit filename="include/LogDistributerAnalyzer_JaccardSimilarity.h" />
+		<Unit filename="include/LogDistributerAnalyzer_JaccardSimilarityCombined.h" />
+		<Unit filename="include/LogDistributerAnalyzer_JaccardSimilarity_qgramExact.h" />
+		<Unit filename="include/LogDistributerAnalyzer_RoundRobin.h" />
+		<Unit filename="include/LogDistributerAnalyzer_characterSimilarity.h" />
+		<Unit filename="include/LogMerge.h" />
+		<Unit filename="include/LogRecord.h" />
+		<Unit filename="include/LogUnArchiver.h" />
+		<Unit filename="include/Rijndael.h" />
+		<Unit filename="include/SetTools.h" />
+		<Unit filename="include/ThreadSafeQueue.h" />
+		<Unit filename="include/characterCount.h" />
+		<Unit filename="include/kmv.h" />
+		<Unit filename="include/kmv_est.h" />
+		<Unit filename="include/kmvtool.h" />
+		<Unit filename="include/sha1.h" />
+		<Unit filename="src/Archiver_Group.cpp" />
+		<Unit filename="src/BZIP_lineBuffer.cpp" />
+		<Unit filename="src/LogArchiver.cpp" />
+		<Unit filename="src/LogDistributer.cpp" />
+		<Unit filename="src/LogDistributerAnalyzer_EditDistance.cpp" />
+		<Unit filename="src/LogDistributerAnalyzer_JaccardEstimator.cpp" />
+		<Unit filename="src/LogDistributerAnalyzer_JaccardSimilarity.cpp" />
+		<Unit filename="src/LogDistributerAnalyzer_JaccardSimilarityCombined.cpp" />
+		<Unit filename="src/LogDistributerAnalyzer_JaccardSimilarity_qgramExact.cpp" />
+		<Unit filename="src/LogDistributerAnalyzer_RoundRobin.cpp" />
+		<Unit filename="src/LogDistributerAnalyzer_characterSimilarity.cpp" />
+		<Unit filename="src/LogMerge.cpp" />
+		<Unit filename="src/LogRecord.cpp" />
+		<Unit filename="src/LogUnArchiver.cpp" />
+		<Unit filename="src/Rijndael.cpp" />
+		<Unit filename="src/SetTools.cpp" />
+		<Unit filename="src/ThreadSafeQueue.cpp" />
+		<Unit filename="src/characterCount.cpp" />
+		<Unit filename="src/kmv.cpp" />
+		<Unit filename="src/kmv_est.cpp" />
+		<Unit filename="src/kmvtool.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/sha1.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
