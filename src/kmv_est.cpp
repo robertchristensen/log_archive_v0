@@ -31,7 +31,9 @@ kmv_est::kmv_est(const char* str, int k, int q_gram_length)
         {
             if( m_kmv_syn->size() < k )
             {
+                int cap1 = m_kmv_syn->capacity();
                 m_kmv_syn->push_back(val);
+                int cap2 = m_kmv_syn->capacity();
                 push_heap(m_kmv_syn->begin(), m_kmv_syn->end());
 
                 // insert the value into the hash set
@@ -102,7 +104,7 @@ int kmv_est::union_DV(const kmv_est *val)
 
 // estimate teh jaccard value between this set and the
 // set being passed in.
-float kmv_est::jaccard_est(const kmv_est *val)
+float kmv_est::jaccard_est(const kmv_est *val) const
 {
     int int_DV;
     int un_DV;
@@ -115,7 +117,7 @@ float kmv_est::jaccard_est(const kmv_est *val)
 // gets the estimation of the number of distinct values in the
 // intersection and union between this set and the set
 // passed in without creating a new set.
-void kmv_est::combine_DV(const kmv_est *val, int &intersection_DV, int &union_DV, float &jaccard_est)
+void kmv_est::combine_DV(const kmv_est *val, int &intersection_DV, int &union_DV, float &jaccard_est) const
 {
     // get k = min(k_a, k_b)
     int min_k = min( this->m_kmv_syn->size(), val->m_kmv_syn->size() );

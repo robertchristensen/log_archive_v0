@@ -15,6 +15,9 @@ class LogDistributerAnalyzer_EditDistance : public LogDistributerAnalyzer
 
         virtual int getBucket(const std::string&);
         virtual int getBucket(const char*);
+
+        virtual void* preBuild(const char*)
+        {    return NULL;      }
     protected:
     private:
         static int getEditDistance(const char*, const char*);

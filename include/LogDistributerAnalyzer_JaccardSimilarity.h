@@ -25,6 +25,9 @@ class LogDistributerAnalyzer_JaccardSimilarity : public LogDistributerAnalyzer
         virtual int getBucket(const std::string&);
         virtual int getBucket(const char*);
 
+        virtual void* preBuild(const char*)
+        {    return NULL;      }
+
         static void makeParsedSet(const std::string&, std::set<std::string>*);
     protected:
         struct ThreadArguments

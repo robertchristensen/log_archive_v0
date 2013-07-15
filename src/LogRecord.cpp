@@ -6,7 +6,8 @@
 using namespace std;
 
 LogRecord::LogRecord(const char* str, int size)
-: m_str_size(size)
+: extra(NULL),
+  m_str_size(size)
 {
     // allocate enough memory so the string can be copied to the buffer
     // (include enough space for an extra null character in case the original

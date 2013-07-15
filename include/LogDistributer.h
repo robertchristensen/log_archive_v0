@@ -31,6 +31,9 @@ public:
     static void StartThread_step1( LogDistributer* );
     void ThreadLoop_step1( );
 
+    static void StartThread_step2( LogDistributer* );
+    void ThreadLoop_step2( );
+
     static int JACCARD_HISTORY;
     static int Q_GRAM_LENGTH;
     static int KMV_MAX_K;
@@ -46,7 +49,8 @@ private:
     ThreadSafeQueue* mp_rawQueue;
     std::thread* mp_stepOneThread;
 
-    //
+    ThreadSafeQueue* mp_toProcess;
+    std::thread* mp_stepTwoThread;
     //ThreadSafeQueue* mp_
 
     LogArchiver* mp_index;

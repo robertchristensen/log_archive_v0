@@ -43,12 +43,12 @@ class kmv_est
 
         // estimate teh jaccard value between this set and the
         // set being passed in.
-        float jaccard_est(const kmv_est *val);
+        float jaccard_est(const kmv_est *val) const;
 
         // gets the estimation of the number of distinct values in the
         // intersection and union between this set and the set
         // passed in without creating a new set.
-        void combine_DV(const kmv_est *val, int &intersection_DV, int &union_DV, float &jaccard_est);
+        void combine_DV(const kmv_est *val, int &intersection_DV, int &union_DV, float &jaccard_est) const;
 
         // calculating and creating a set of the intersection or union
         // can be implemented later when it is found to be important.

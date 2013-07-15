@@ -16,6 +16,9 @@ class LogDistributerAnalyzer_JaccardSimilarityCombined : public LogDistributerAn
 
         virtual int getBucket(const std::string&);
         virtual int getBucket(const char*);
+
+        virtual void* preBuild(const char*)
+        {   return NULL;   }
     protected:
     private:
         static float averageJaccardInColumn(const std::list< std::set<std::string>* >* input, const std::set<std::string>* compare);

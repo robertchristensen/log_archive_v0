@@ -54,7 +54,7 @@ private:
     const static int workFactor = 30;
 
     // default max number of elements the queue can hold
-    const static int DEFAULT_QUEUE_SIZE = 2000;
+    const static int DEFAULT_QUEUE_SIZE = 16000;
 };
 
 #endif // LOGARCHIVER_H

@@ -12,6 +12,7 @@
 #include <cstring>
 #include <vector>
 #include <thread>
+#include <iostream>
 
 using namespace std;
 
@@ -55,6 +56,9 @@ LogDistributer::LogDistributer(int num_archivers, DistributerType distrib)
 
     mp_rawQueue = new ThreadSafeQueue(DEFAULT_INSERT_QUEUE_SIZE);
     mp_stepOneThread = new thread(StartThread_step1, this);
+
+    mp_toProcess = new ThreadSafeQueue(DEFAULT_INSERT_QUEUE_SIZE);
+    mp_stepTwoThread = new thread(StartThread_step2, this);
 }
 
 LogDistributer::~LogDistributer()
@@ -71,6 +75,8 @@ LogDistributer::~LogDistributer()
     delete mp_index;
     delete mp_rawQueue;
     delete mp_stepOneThread;
+    delete mp_toProcess;
+    delete mp_stepTwoThread;
 }
 
 int LogDistributer::close()
@@ -79,7 +85,10 @@ int LogDistributer::close()
         return 0;
 
     mp_rawQueue->push( NULL );
+    mp_toProcess->push( NULL );
+
     mp_stepOneThread->join();
+    mp_stepTwoThread->join();
 
     m_closed = true;
     vector<LogArchiver*>::iterator it = mp_archivers->begin();
@@ -98,23 +107,52 @@ void LogDistributer::StartThread_step1( LogDistributer* i )
 void LogDistributer::ThreadLoop_step1( )
 {
     void* from_queue;
-    int bucket;
-    char cbucket;
+    //int bucket;
+    //char cbucket;
     LogRecord* data;
     while((from_queue = this->mp_rawQueue->pop_front( )) != NULL)
     {
         data = (LogRecord*) from_queue;
-        bucket = mp_analyzer->getBucket(data->m_str);
+        void* xdata = mp_analyzer->preBuild(data->m_str);
+        data->extra = xdata;
+        mp_toProcess->push(data);
+    }
+    return;
+}
+
+void LogDistributer::StartThread_step2( LogDistributer* i )
+{
+    i->ThreadLoop_step2( );
+    return;
+}
+
+void LogDistributer::ThreadLoop_step2( )
+{
+    void* from_queue;
+    int bucket;
+    LogRecord* data;
+    char cbucket;
+
+    while((from_queue = this->mp_toProcess->pop_front( )) != NULL)
+    {
+        data = (LogRecord*) from_queue;
+        //bucket = mp_analyzer->ThreadedgetBucket(data->extra);
+        bucket = mp_analyzer->ThreadedgetBucket(data);
+
         cbucket = (unsigned char) bucket;
 
         if(bucket == mp_archivers->size())
+        {
             mp_archivers->push_back(new LogArchiver(bucket));
+        }
 
+
+
+        data->extra = NULL;
         mp_archivers->at(bucket)->BackgroundInsertRecord(data);
 
         mp_index->BackgroundInsertRecord( &cbucket, 1 );
     }
-    return;
 }
 
 int LogDistributer::insert(char *str, int size)
@@ -142,4 +180,5 @@ int LogDistributer::insert(char *str, int size)
 int LogDistributer::Background_insert(char *str, int size)
 {
     mp_rawQueue->push( new LogRecord(str, size));
+    return 0;
 }

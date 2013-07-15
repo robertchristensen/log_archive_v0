@@ -13,6 +13,9 @@ class LogDistributerAnalyzer_RoundRobin : public LogDistributerAnalyzer
         virtual int getBucket(const std::string&);
         virtual int getBucket(const char*);
 
+        virtual void* preBuild(const char*)
+        {   return NULL;    }
+
         int getNextIndex();
     protected:
     private:

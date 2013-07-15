@@ -15,6 +15,7 @@ struct LogRecord
         ~LogRecord();
 
         char* m_str;
+        void* extra;
         int m_str_size;
     private:
         //char* m_back_str;

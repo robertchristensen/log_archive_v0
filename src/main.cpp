@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string>
 #include <cstring>
+#include <execinfo.h>
+#include <signal.h>
 
 #include <bzlib.h>
 
@@ -17,6 +19,49 @@ int DECOMPRESS = 0;
 int BUCKETS = 8;
 LogDistributer::DistributerType DISTRIBUTER = LogDistributer::JAC_EST;
 bool quite = false;
+
+void handler(int sig) {
+  void *array[10];
+  size_t size;
+
+  // get void*'s for all entries on the stack
+  size = backtrace(array, 10);
+
+  // print out all the frames to stderr
+  fprintf(stderr, "Error: signal %d:\n", sig);
+  backtrace_symbols_fd(array, size, 2);
+  exit(1);
+}
+
+void printHelp()
+{
+    std::cout << "input data will come from stdin.  when data is decompressed, it is written"
+              << "to stdout\n\n"
+              << "The following are single character arguments:\n"
+              << " -q quite operations.  Print very little to the screen\n"
+              << " -c compress data.  This will initialize the compressor algorithm\n"
+              << " -d decompress data.  This will initalize the decompression algorithm\n"
+              << " -[1-9] compression block size passed to the compressor (bzip2 in this case)\n\n"
+              << "The followng are additional arguments which can be given which require a full name\n\n"
+              << " --jhistory [value] the size of the sliding window history.  This value is only used if needed\n"
+              << " --buckets [1-255] the number of buckets partition the data into\n"
+              << " --qgram_size [value] the length of he qgram when qgrams are used\n"
+              << " --max_k [value] the number of values to keep in the kmv estimator.  Used for jaccard estimation\n"
+              << " --help display this message and exit\n"
+              << "The following are similarity functions which can be used for the algorithm\n"
+              << " --round_robin distribution where a round robin scheme is used\n"
+              << " --edit_dist distribution where the bucket with the lowest edit distance is used\n"
+              << " --jaccard distribution where set comparison between log record words is used\n"
+              << " --jaccard_combine distribution similar to jaccard except history is averaged\n"
+              << " --char distribution where character count similarity is used\n"
+              << " --jaccard_qgram distribution where the set contains all qgrams of the log record\n"
+              << " --est distribution where the jaccard value using qgrams is estimated\n\n"
+              << "As a note, some of the distribution functions are now defunt.  As the development\n"
+              << "of this project progressed, some were found to not be useful and were never updated\n"
+              << "when changes were made"
+              << endl;
+
+}
 
 
 void parseInput(int argc, char**argv)
@@ -75,6 +120,13 @@ void parseInput(int argc, char**argv)
                 t++;
             }
             i++;
+        }
+        else if(strcmp("--help", argv[i]) == 0)
+        {
+            i++;
+            cout << "printing help" << endl;
+            printHelp();
+            exit(0);
         }
         else if(strcmp("--round_robin", argv[i]) == 0)
         {
@@ -158,12 +210,18 @@ void parseInput(int argc, char**argv)
                 cerr << "ERROR: unable to parse the value of max k correctly" << endl;
             i++;
         }
+        else
+        {
+            cerr << "ERROR: unable to parse the argument \'" << argv[i] << "\'" << endl;
+            exit(0);
+        }
     }
 }
 
 
 int main(int argc, char **argv)
 {
+    signal(SIGSEGV, handler);   // install our handler
     parseInput(argc, argv);
 
     if(DECOMPRESS == false)

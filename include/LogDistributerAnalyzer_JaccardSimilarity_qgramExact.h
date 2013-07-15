@@ -18,7 +18,8 @@ class LogDistributerAnalyzer_JaccardSimilarity_qgramExact : public LogDistribute
         virtual int getBucket(const std::string&);
         virtual int getBucket(const char*);
 
-
+        virtual void* preBuild(const char*)
+        {   return NULL;   }
     protected:
 
     private:
